@@ -52,5 +52,5 @@ PC: 0803 | A: 0A | X: 13 | Y: 00 | Last Opcode: D0 | Last Cycl: 3 | Cycl-TT: 76
 PC: 0804 | A: 0A | X: 14 | Y: 00 | Last Opcode: E8 | Last Cycl: 2 | Cycl-TT: 78
 PC: 0806 | A: 0A | X: 14 | Y: 00 | Last Opcode: E0 | Last Cycl: 2 | Cycl-TT: 80
 PC: 0808 | A: 0A | X: 14 | Y: 00 | Last Opcode: D0 | Last Cycl: 2 | Cycl-TT: 82
-PC: 0001 | A: 0A | X: 14 | Y: 00 | Last Opcode: 60 | Last Cycl: 8 | Cycl-TT: 90
+PC: 0001 | A: 0A | X: 14 | Y: 00 | Last Opcode: 60 | Last Cycl: 6 | Cycl-TT: 88
 ```
