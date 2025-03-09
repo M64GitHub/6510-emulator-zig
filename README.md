@@ -7,11 +7,11 @@ The test program `main.zig` writes a small routine into the memory, which execut
 ```
 0800: A9 0A                       LDA #$0A        ; 2
 0802: AA                          TAX             ; 2
-0803: 69 1E                       ADC #$1E        ; 2  loop
+0803: 69 1E                       ADC #$1E        ; 2  loop start
 0805: 9D 00 D4                    STA $D400,X     ; 5  write sid register X
 0808: E8                          INX             ; 2
 0809: E0 19                       CPX #$19        ; 2
-080B: D0 F6                       BNE $0804       ; 2/3
+080B: D0 F6                       BNE $0804       ; 2/3 loop
 080D: 60                          RTS             ; 6
 
 ```
