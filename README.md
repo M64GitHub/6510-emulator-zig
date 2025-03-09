@@ -43,18 +43,20 @@ var cpu = CPU.Init(0x0800); // PC start address
 const file_name = "data/test1.prg";
 try stdout.print("[MAIN] Loading '{s}'\n", .{file_name});
 
-// The second parameter (true)  tells LoadPrg to set the PC to the load address
+// The second parameter (true) tells LoadPrg() to set the PC to the load address,
+// effectively jupming to program start.
 const load_address = try cpu.LoadPrg(file_name, true);
 try stdout.print("[MAIN] Load address: {X:0>4}\n", .{load_address});
 ```
-**Run the CPU until program end: (RunStep returns the number of cycles executed)**
+**Run the CPU until program end:**  
+`RunStep()` returns the number of cycles executed
 ```zig
 while (cpu.RunStep() != 0) {
     cpu.PrintStatus();
 }
 ```
 **Or run the CPU a specific amount of virtual video frames:**  
-RunPALFrames returns the number of frames executed.
+`RunPALFrames()` returns the number of frames executed.
 ```zig
 cpu.dbg_enabled = true; // will call PrintStatus() after each step
 var frames_executed = cpu.RunPALFrames(1);
@@ -76,8 +78,9 @@ pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of u
 
 #### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
 ```zig
-// The following functions return false, when no (more) full frame could be executed. Else true.
-pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given PAL frames,
+// The following functions return the number of frames executed
+
+pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given PAL frames
 pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given NTSC frames
 ```
 
@@ -87,9 +90,10 @@ pub fn ReadByte(cpu: *CPU, Address: u16) u8  // Read a byte from memory
 pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memory
 pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void // Write a byte to memory
 pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to memory
-pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 // Load a .prg file into memory
+// Load a .prg file into memory. Returns the load address.
+// When setPC is true, the CPU.PC is set to the load address.
+pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 
 pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 // Write a buffer containing a .prg to memory 
-pub fn LoadPrg(cpu: *CPU, Program: []const u8) u16 // Load a PRG program into memory
 ```
 
 #### 🎶 **SID Register Monitoring**
