@@ -53,7 +53,7 @@ while (cpu.RunStep() != 0) {
     cpu.PrintStatus();
 }
 ```
-**Or run the CPU a specific amount of virtual video frames:  **
+**Or run the CPU a specific amount of virtual video frames:**  
 RunPALFrames returns the number of frames executed.
 ```zig
 cpu.dbg_enabled = true; // will call PrintStatus() after each step
