@@ -37,7 +37,7 @@ pub fn main() !void {
 
     try stdout.print("[MAIN] Executing program ...\n", .{});
     const SID_volume_old = cpu.GetSIDRegisters()[24];
-    while (cpu.Run_Step() != 0) {
+    while (cpu.RunStep() != 0) {
         cpu.PrintStatus();
         if (cpu.SIDRegWritten()) {
             try stdout.print("[MAIN] SID register written!\n", .{});

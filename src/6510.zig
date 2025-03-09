@@ -178,9 +178,9 @@ pub const CPU = struct {
         stdout.print("\n", .{}) catch {};
     }
 
-    pub fn LoadPrg(cpu: *CPU, Program: []const u8, NumBytes: u32) u16 {
+    pub fn LoadPrg(cpu: *CPU, Program: []const u8) u16 {
         var LoadAddress: u16 = 0;
-        if ((Program.len != 0) and (NumBytes > 2)) {
+        if ((Program.len != 0) and (Program.len > 2)) {
             var offs: u32 = 0;
             const Lo: u16 = Program[offs];
             offs += 1;
@@ -189,7 +189,7 @@ pub const CPU = struct {
             LoadAddress = @as(u16, Lo) | @as(u16, Hi);
 
             var i: u16 = LoadAddress;
-            while (i < (LoadAddress +% NumBytes -% 2)) : (i +%= 1) {
+            while (i < (LoadAddress +% Program.len -% 2)) : (i +%= 1) {
                 cpu.mem.Data[i] = Program[offs];
                 offs += 1;
             }
@@ -492,7 +492,7 @@ pub const CPU = struct {
         cpu.Flags.C = @intFromBool(RegisterValue >= Operand);
     }
 
-    pub fn Run_Step(cpu: *CPU) u8 {
+    pub fn RunStep(cpu: *CPU) u8 {
         const cycles_now: u32 = cpu.cycles_executed;
         const opcode: u8 = CPU_FetchUByte(cpu);
         cpu.opcode_last = opcode;
