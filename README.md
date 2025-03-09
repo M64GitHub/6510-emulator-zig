@@ -89,6 +89,7 @@ pub fn ReadByte(cpu: *CPU, Address: u16) u8  // Read a byte from memory
 pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memory
 pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void // Write a byte to memory
 pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to memory
+
 // Load a .prg file into memory. Returns the load address.
 // When setPC is true, the CPU.PC is set to the load address.
 pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 
