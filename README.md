@@ -162,6 +162,8 @@ Test Output:
 [CPU ] PC: 0001 | A: CC | X: 19 | Y: 00 | Last Opc: 60 | Last Cycl: 6 | Cycl-TT: 233 | F: 00100100
 ```
 
+<br>
+
 ## License
 This emulator is released under the **MIT License**, allowing free modification and distribution.
 
