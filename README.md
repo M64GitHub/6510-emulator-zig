@@ -48,6 +48,10 @@ const file_name = "data/test1.prg";
 const load_address = try cpu.LoadPrg(file_name, true);
 ```
 **Run the CPU until program end:**  
+```zig
+cpu.Call(load_address); // returns on RTS
+```
+Or have more control and execute instruction by instruction:
 `RunStep()` returns the number of cycles executed
 ```zig
 while (cpu.RunStep() != 0) {
@@ -72,7 +76,12 @@ The following **public functions** provide full control over the CPU:
 pub fn Init(allocator: std.mem.Allocator, PC_init: u16) CPU // Initialize CPU with a start PC
 pub fn Reset(cpu: *CPU) void // Reset CPU registers and PC (0xFFFC)
 pub fn HardReset(cpu: *CPU) void // Reset and clear memory
+```
+
+#### ⚡ ***Execution**
+```
 pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of used cycles
+pub fn Call(cpu: *CPU, Address: u16) void // Call a subroutine at Address, return on RTS
 ```
 
 #### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
