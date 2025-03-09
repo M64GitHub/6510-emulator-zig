@@ -2,6 +2,17 @@
 
 A simple MOS6510 (Commodore 64) CPU emulator in zig. Easily extendable. 
 
+
+The test program `main.zig` writes a small routine into the memory, which executes a simple loop:
+```
+0800: A9 0A                       LDA #$0A        ; 2 
+0802: AA                          TAX             ; 2 
+0803: E8                          INX             ; 2 loop
+0804: E0 14                       CPX #$14        ; 2 
+0806: D0 FB                       BNE $0803       ; 2/3 
+0808: 60                          RTS             ; 6 
+```
+
 Test Output:
 ```
 Initializing CPU
