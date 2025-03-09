@@ -2,15 +2,16 @@
 
 A **MOS 6510 (Commodore 64) CPU emulator** written in **Zig**, designed for accuracy, efficiency, and integration with SID-based applications. This emulator features **video synchronization** for **PAL and NTSC**, enabling smooth execution of CPU cycles in sync with real C64 refresh rates. Additionally, it includes **SID register monitoring**, making it ideal for **audio-driven applications** and real-time SID playback analysis.
 
-## Features
-✅ **Fully Functional 6510 CPU Emulator** – Implements all 6502/6510 instructions and addressing modes.
-✅ **Video Synchronization** – Execute CPU cycles in sync with PAL (19,656 cycles/frame) or NTSC (17,734 cycles/frame).
-✅ **SID Register Modification Detection** – Detects when SID registers (`0xD400-0xD418`) are written to, perfect for tracking SID interaction.
-✅ **Memory Read/Write Functions** – Flexible access to C64 memory space.
-✅ **Program Loading Support** – Load PRG files and execute C64 programs.
-✅ **CPU Debugging Tools** – Functions for inspecting CPU registers, memory, and SID states.
+Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 
----
+## Features
+- 🎮 **Fully Functional 6510 CPU Emulator** – Implements all 6502/6510 instructions and addressing modes.
+- 🎞 **Video Synchronization** – Execute CPU cycles in sync with PAL (19,656 cycles/frame) or NTSC (17,734 cycles/frame).
+- 🎵 **SID Register Modification Detection** – Detects when SID registers (`0xD400-0xD418`) are written to, perfect for tracking SID interaction.
+- 💾 **Memory Read/Write Functions** – Flexible access to C64 memory space.
+- 📀 **Program Loading Support** – Load PRG files and execute C64 programs.
+- 🛠 **CPU Debugging Tools** – Functions for inspecting CPU registers, memory, and SID states.
+
 
 ## Installation
 ### Requirements:
@@ -27,10 +28,10 @@ zig build
 To integrate the emulator into a Zig project, simply import it and initialize:
 ```zig
 var cpu = CPU.Init(0x0800);
+// write something into memory via WriteByte() calls, or use LoadProgram()
 cpu.RunPALFrames(1); // Execute one PAL frame worth of cycles
 ```
 
----
 
 ## API Reference
 The following **public functions** provide full control over the CPU:
@@ -67,24 +68,6 @@ pub fn PrintSIDRegisters(cpu: *CPU) void // Print SID register values
 ### 🔍 **Debugging Tools**
 ```zig
 pub fn PrintStatus(cpu: *CPU) void // Print CPU state (PC, Registers, Last Opcode, etc.)
-```
-
----
-
-## License
-This emulator is released under the **MIT License**, allowing free modification and distribution.
-
-## Credits
-Developed with ❤️ by **Mario** & **ChatGPT**, blending **love, passion, and retro computing magic**. 💖🚀🔥
-
----
-
-## 🚀 Get Started Now!
-Clone the repository and start experimenting:
-```sh
-git clone https://github.com/M64GitHub/6510-emulator-zig.git
-cd 6510-emulator-zig
-zig build
 ```
 
 ## Test Run
@@ -136,6 +119,23 @@ Test Output:
 [CPU ] PC: 0001 | A: CC | X: 19 | Y: 00 | Last Opc: 60 | Last Cycl: 6 | Cycl-TT: 233 | F: 00100100
 ```
 
+---
+
+## License
+This emulator is released under the **MIT License**, allowing free modification and distribution.
+
+## Credits
+Developed with ❤️ by **M64**. Based on the works of @davepoo 💖🚀🔥
+
+---
+
+## 🚀 Get Started Now!
+Clone the repository and start experimenting:
+```sh
+git clone https://github.com/M64GitHub/6510-emulator-zig.git
+cd 6510-emulator-zig
+zig build
+```
 Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 
 
