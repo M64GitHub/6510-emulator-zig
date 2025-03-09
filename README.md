@@ -4,12 +4,12 @@ A **MOS 6510 (Commodore 64) CPU emulator** written in **Zig**, designed for accu
 
 Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 
-## Features
+## 🚀 Features
 - 🎮 **Fully Functional 6510 CPU Emulator** – Implements all 6502/6510 instructions and addressing modes.
 - 🎞 **Video Synchronization** – Execute CPU cycles in sync with PAL (19,656 cycles/frame) or NTSC (17,734 cycles/frame).
 - 🎵 **SID Register Modification Detection** – Detects when SID registers (`0xD400-0xD418`) are written to, perfect for tracking SID interaction.
-- 💾 **Memory Read/Write Functions** – Flexible access to C64 memory space.
-- 📀 **Program Loading Support** – Load PRG files and execute C64 programs.
+- 📝 **Memory Read/Write Functions** – Flexible access to C64 memory space.
+- 💾 **Program Loading Support** – Load PRG files and execute C64 programs.
 - 🛠 **CPU Debugging Tools** – Functions for inspecting CPU registers, memory, and SID states.
 
 
@@ -49,7 +49,7 @@ pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for 
 pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given NTSC frames
 ```
 
-### 📀 **Memory Read/Write**
+### 📝 **Memory Read/Write**
 ```zig
 pub fn ReadByte(cpu: *CPU, Address: u16) u8  // Read a byte from memory
 pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memory
