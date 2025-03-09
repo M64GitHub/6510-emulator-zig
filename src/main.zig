@@ -12,11 +12,11 @@ pub fn main() !void {
 
     // 0800: A9 0A                       LDA #$0A        ; 2
     // 0802: AA                          TAX             ; 2
-    // 0803: 69 1E                       ADC #$1E        ; 2 loop
-    // 0805: 9D 00 D4                    STA $D400,X     ; 5
+    // 0803: 69 1E                       ADC #$1E        ; 2 loop start:
+    // 0805: 9D 00 D4                    STA $D400,X     ; 5 write SID register X
     // 0808: E8                          INX             ; 2
     // 0809: E0 19                       CPX #$19        ; 2
-    // 080B: D0 F6                       BNE $0803       ; 2/3
+    // 080B: D0 F6                       BNE $0803       ; 2/3 loop
     // 080D: 60                          RTS             ; 6
 
     cpu.WriteByte(0xa9, 0x0800); //         LDA
