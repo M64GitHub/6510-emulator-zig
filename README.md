@@ -16,9 +16,9 @@ Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 
 <br>
 
-## Installation
+## Building the Project
 ### Requirements:
-- **Zig** (Latest stable version)
+- ⚡ **Zig** (Latest stable version)
 
 ### Building the Emulator:
 ```sh
@@ -29,7 +29,7 @@ zig build
 ```sh
 zig build run
 ```
-
+<br>
 
 ## API Reference
 ### 💡 Quick Start
@@ -60,22 +60,24 @@ cpu.dbg_enabled = true; // will call PrintStatus() after each step
 var frames_executed = cpu.RunPALFrames(1);
 ```
 
+### Emulator API
+
 The following **public functions** provide full control over the CPU:
 
-### 🖥 **CPU Control**
+#### 🖥 **CPU Control**
 ```zig
 pub fn Init(PC_init: u16) CPU // Initialize CPU with a start PC
 pub fn Reset(cpu: *CPU) void // Reset CPU registers and PC (0xFFFC)
 pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction
 ```
 
-### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
+#### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
 ```zig
 pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given PAL frames
 pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given NTSC frames
 ```
 
-### 📝 **Memory Read/Write**
+#### 📝 **Memory Read/Write**
 ```zig
 pub fn ReadByte(cpu: *CPU, Address: u16) u8  // Read a byte from memory
 pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memory
@@ -84,14 +86,14 @@ pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to me
 pub fn LoadPrg(cpu: *CPU, Program: []const u8) u16 // Load a PRG program into memory
 ```
 
-### 🎶 **SID Register Monitoring**
+#### 🎶 **SID Register Monitoring**
 ```zig
 pub fn SIDRegWritten(cpu: *CPU) bool // Check if SID registers were modified
 pub fn GetSIDRegisters(cpu: *CPU) [25]u8 // Retrieve the current SID register values
 pub fn PrintSIDRegisters(cpu: *CPU) void // Print SID register values
 ```
 
-### 🔍 **Debugging Tools**
+#### 🔍 **Debugging Tools**
 ```zig
 pub fn PrintStatus(cpu: *CPU) void // Print CPU state (PC, Registers, Last Opcode, etc.)
 ```
