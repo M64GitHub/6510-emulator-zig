@@ -98,7 +98,6 @@ pub const CPU = struct {
     pub fn ReadWord(cpu: *CPU, Address: u16) u16 {
         const LoByte: u8 = ReadByte(cpu, Address);
         const HiByte: u8 = ReadByte(cpu, Address + 1);
-        cpu.cycles_executed +%= 2;
         return @as(u16, LoByte) | (@as(u16, HiByte) << 8);
     }
 
