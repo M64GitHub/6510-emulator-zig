@@ -62,7 +62,7 @@ var frames_executed = cpu.RunPALFrames(1);
 
 <br>
 
-### Emulator API
+### 📜 Emulator API
 
 The following **public functions** provide full control over the CPU:
 
