@@ -17,15 +17,15 @@ Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 <br>
 
 ## Building the Project
-### Requirements:
+#### Requirements:
 - ⚡ **Zig** (Latest stable version)
 
-### Building the Emulator:
+#### Building the Test Executable:
 ```sh
 zig build
 ```
 
-### Running the Emulator:
+#### Running the Test Executable:
 ```sh
 zig build run
 ```
