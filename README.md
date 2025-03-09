@@ -32,13 +32,32 @@ zig build run
 
 
 ## API Reference
-
+### 💡 Quick Start
 To integrate the emulator into a Zig project, simply import it and initialize:
 ```zig
 const CPU = @import("6510.zig").CPU;
-var cpu = CPU.Init(0x0800);
-// write something into memory via WriteByte() calls, or use LoadProgram()
-cpu.RunPALFrames(1); // Execute one PAL frame worth of cycles
+var cpu = CPU.Init(0x0800); // PC start address
+```
+Load a program `.prg` file:
+```
+const file_name = "data/test1.prg";
+try stdout.print("[MAIN] Loading '{s}'\n", .{file_name});
+
+// The second parameter (true)  tells LoadPrg to set the PC to the load address
+const load_address = try cpu.LoadPrg(file_name, true);
+try stdout.print("[MAIN] Load address: {X:0>4}\n", .{load_address});
+```
+Run the CPU until program end: (RunStep returns the number of cycles executed)
+```
+while (cpu.RunStep() != 0) {
+    cpu.PrintStatus();
+}
+```
+Or run the CPU a specific amount of virtual video frames:  
+RunPALFrames returns the number of frames executed.
+```
+cpu.dbg_enabled = true; // will call PrintStatus() after each step
+var frames_executed = cpu.RunPALFrames(1);
 ```
 
 The following **public functions** provide full control over the CPU:
