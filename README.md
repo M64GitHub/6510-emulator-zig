@@ -33,13 +33,13 @@ zig build run
 
 ## API Reference
 ### 💡 Quick Start
-To integrate the emulator into a Zig project, simply import it and initialize:
+**To integrate the emulator into a Zig project, simply import it and initialize:**
 ```zig
 const CPU = @import("6510.zig").CPU;
 var cpu = CPU.Init(0x0800); // PC start address
 ```
-Load a program `.prg` file:
-```
+**Load a program `.prg` file:**
+```zig
 const file_name = "data/test1.prg";
 try stdout.print("[MAIN] Loading '{s}'\n", .{file_name});
 
@@ -47,15 +47,15 @@ try stdout.print("[MAIN] Loading '{s}'\n", .{file_name});
 const load_address = try cpu.LoadPrg(file_name, true);
 try stdout.print("[MAIN] Load address: {X:0>4}\n", .{load_address});
 ```
-Run the CPU until program end: (RunStep returns the number of cycles executed)
-```
+**Run the CPU until program end: (RunStep returns the number of cycles executed)**
+```zig
 while (cpu.RunStep() != 0) {
     cpu.PrintStatus();
 }
 ```
-Or run the CPU a specific amount of virtual video frames:  
+**Or run the CPU a specific amount of virtual video frames:  **
 RunPALFrames returns the number of frames executed.
-```
+```zig
 cpu.dbg_enabled = true; // will call PrintStatus() after each step
 var frames_executed = cpu.RunPALFrames(1);
 ```
