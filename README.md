@@ -12,7 +12,7 @@ Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 - 🎵 **SID Register Modification Detection** – Detects when SID registers (`0xD400-0xD418`) are written to, perfect for tracking SID interaction.
 - 📝 **Memory Read/Write Functions** – Flexible access to C64 memory space.
 - 💾 **Program Loading Support** – Load PRG files and execute C64 programs.
-- 🛠 **CPU Debugging Tools** – Functions for inspecting CPU registers, memory, and SID states.
+- 🛠 **CPU Debugging Tools** – Functions for inspecting CPU registers, flags, memory, and SID states.
 
 <br>
 
