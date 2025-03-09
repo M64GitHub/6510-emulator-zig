@@ -36,17 +36,15 @@ zig build run
 **To integrate the emulator into a Zig project, simply import it and initialize:**
 ```zig
 const CPU = @import("6510.zig").CPU;
-var cpu = CPU.Init(0x0800); // PC start address
+var cpu = CPU.Init(0x0800); // initialize the PC with address 0x0800
 ```
 **Load a program `.prg` file:**
 ```zig
 const file_name = "data/test1.prg";
-try stdout.print("[MAIN] Loading '{s}'\n", .{file_name});
 
 // The second parameter (true) tells LoadPrg() to set the PC to the load address,
 // effectively jupming to program start.
 const load_address = try cpu.LoadPrg(file_name, true);
-try stdout.print("[MAIN] Load address: {X:0>4}\n", .{load_address});
 ```
 **Run the CPU until program end:**  
 `RunStep()` returns the number of cycles executed
