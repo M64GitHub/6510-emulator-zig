@@ -71,12 +71,13 @@ The following **public functions** provide full control over the CPU:
 pub fn Init(PC_init: u16) CPU // Initialize CPU with a start PC
 pub fn Reset(cpu: *CPU) void // Reset CPU registers and PC (0xFFFC)
 pub fn HardReset(cpu: *CPU) void // Reset and clear memory
-pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction
+pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of used cycles
 ```
 
 #### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
 ```zig
-pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given PAL frames
+// The following functions return false, when no (more) full frame could be executed. Else true.
+pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given PAL frames,
 pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) bool // Execute CPU cycles for given NTSC frames
 ```
 
