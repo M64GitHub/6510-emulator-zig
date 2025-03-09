@@ -76,9 +76,10 @@ pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of u
 
 #### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
 ```zig
-// The following functions return the number of frames executed
+// The following functions execute until a number of PAL or NTSC frames is reached
+// They return the number of frames executed
 
-pub fn RunPALFrames(cpu: *CPU, frame_count: u32) u32 // Execute until a number of PAL frames reached
+pub fn RunPALFrames(cpu: *CPU, frame_count: u32) u32 // 
 pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) u32 // Execute until a number of NTSC frames reached
 ```
 
