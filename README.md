@@ -47,7 +47,7 @@ The following **public functions** provide full control over the CPU:
 ```zig
 pub fn Init(PC_init: u16) CPU // Initialize CPU with a start PC
 pub fn Reset(cpu: *CPU) void // Reset CPU registers and PC (0xFFFC)
-pub fn Run_Step(cpu: *CPU) u8 // Execute a single instruction
+pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction
 ```
 
 ### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
@@ -62,7 +62,7 @@ pub fn ReadByte(cpu: *CPU, Address: u16) u8  // Read a byte from memory
 pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memory
 pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void // Write a byte to memory
 pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to memory
-pub fn LoadPrg(cpu: *CPU, Program: []const u8, NumBytes: u32) u16 // Load a PRG program into memory
+pub fn LoadPrg(cpu: *CPU, Program: []const u8) u16 // Load a PRG program into memory
 ```
 
 ### 🎶 **SID Register Monitoring**
