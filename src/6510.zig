@@ -178,7 +178,7 @@ pub const CPU = struct {
         return LoadAddress;
     }
 
-    pub fn WriteMem(cpu: *CPU, data: []const u8, Address: u16) u16 {
+    pub fn WriteMem(cpu: *CPU, data: []const u8, Address: u16) void {
         var offs: u32 = 0;
         var i: u16 = Address;
         while (offs < data.len) : (i +%= 1) {
