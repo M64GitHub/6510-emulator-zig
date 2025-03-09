@@ -7,7 +7,7 @@ Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 <br>
 
 ## 🚀 Features
-- 🎮 **Fully Functional 6510 CPU Emulator** – Implements all 6502/6510 instructions and addressing modes.
+- 🎮 **Fully Functional 6510 CPU Emulator** – Implements all legal 6502/6510 instructions and addressing modes.
 - 🎞 **Video Synchronization** – Execute CPU cycles in sync with PAL (19,656 cycles/frame) or NTSC (17,734 cycles/frame).
 - 🎵 **SID Register Modification Detection** – Detects when SID registers (`0xD400-0xD418`) are written to, perfect for tracking SID interaction.
 - 📝 **Memory Read/Write Functions** – Flexible access to C64 memory space.
