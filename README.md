@@ -68,7 +68,7 @@ The following **public functions** provide full control over the CPU:
 
 #### 🖥 **CPU Control**
 ```zig
-pub fn Init(PC_init: u16) CPU // Initialize CPU with a start PC
+pub fn Init(allocator: std.mem.Allocator, PC_init: u16) CPU // Initialize CPU with a start PC
 pub fn Reset(cpu: *CPU) void // Reset CPU registers and PC (0xFFFC)
 pub fn HardReset(cpu: *CPU) void // Reset and clear memory
 pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of used cycles
