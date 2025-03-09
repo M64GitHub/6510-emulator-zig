@@ -36,7 +36,7 @@ zig build run
 **To integrate the emulator into a Zig project, simply import it and initialize:**
 ```zig
 const CPU = @import("6510.zig").CPU;
-var cpu = CPU.Init(0x0800); // initialize the PC with address 0x0800
+var cpu = CPU.Init(std.heap.page_allocator, 0x0800); // initialize the PC with address 0x0800
 ```
 **Load a program `.prg` file:**
 ```zig
@@ -90,8 +90,9 @@ pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memor
 pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void // Write a byte to memory
 pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to memory
 
-// Load a .prg file into memory. Returns the load address.
+// LoadPrg() - Load a .prg file into memory. Returns the load address.
 // When setPC is true, the CPU.PC is set to the load address.
+// This function utilizes the allocator set at CPU initialization
 pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 
 pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 // Write a buffer containing a .prg to memory 
 ```
