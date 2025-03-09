@@ -87,7 +87,15 @@ pub const CPU = struct {
     }
 
     pub fn PrintStatus(cpu: *CPU) void {
-        std.debug.print("PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opcode: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d}\n", .{ cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.opcode_last, cpu.cycles_last_step, cpu.cycles_executed });
+        const stdout = std.io.getStdOut().writer();
+        stdout.print("PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opc: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d} | ", .{ cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.opcode_last, cpu.cycles_last_step, cpu.cycles_executed }) catch {};
+        PrintFlags(cpu);
+        stdout.print("\n", .{}) catch {};
+    }
+
+    pub fn PrintFlags(cpu: *CPU) void {
+        const stdout = std.io.getStdOut().writer();
+        stdout.print("F: {b:0>8}", .{cpu.Status}) catch {};
     }
 
     pub fn ReadByte(cpu: *CPU, Address: u16) u8 {
