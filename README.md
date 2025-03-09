@@ -60,6 +60,8 @@ cpu.dbg_enabled = true; // will call PrintStatus() after each step
 var frames_executed = cpu.RunPALFrames(1);
 ```
 
+<br>
+
 ### Emulator API
 
 The following **public functions** provide full control over the CPU:
