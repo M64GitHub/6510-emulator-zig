@@ -115,7 +115,7 @@ pub const CPU = struct {
         cpu.mem.clear();
     }
 
-    pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool {
+    pub fn RunPALFrames(cpu: *CPU, frame_count: u32) u32 {
         var frames_now = cpu.frame_ctr_PAL;
         var frames_executed: u32 = 0;
 
@@ -124,11 +124,10 @@ pub const CPU = struct {
             if (frames_executed == frame_count) break;
             frames_now = cpu.frame_ctr_PAL;
         }
-        if (frames_executed == 0) return false;
-        return true;
+        return frames_executed;
     }
 
-    pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) bool {
+    pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) u32 {
         var frames_now = cpu.frame_ctr_NTSC;
         var frames_executed = 0;
 
@@ -137,8 +136,7 @@ pub const CPU = struct {
             if (frames_executed == frame_count) break;
             frames_now = cpu.frame_ctr_NTSC;
         }
-        if (frames_executed == 0) return false;
-        return true;
+        return frames_executed;
     }
 
     pub fn PrintStatus(cpu: *CPU) void {
