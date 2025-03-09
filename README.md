@@ -36,17 +36,22 @@ zig build run
 **To integrate the emulator into a Zig project, simply import it and initialize:**
 ```zig
 const CPU = @import("6510.zig").CPU;
-var cpu = CPU.Init(0x0800); // initialize the PC with address 0x0800
+var cpu = CPU.Init(std.heap.page_allocator, 0x0800); // initialize the PC with address 0x0800
 ```
 **Load a program `.prg` file:**
 ```zig
-const file_name = "data/test1.prg";
-
 // The second parameter (true) tells LoadPrg() to set the PC to the load address,
-// effectively jupming to program start.
+// effectively jupming to program start. LoadPrg() is currently the only function
+// utilizing the allocator we set above.
+
+const file_name = "data/test1.prg";
 const load_address = try cpu.LoadPrg(file_name, true);
 ```
 **Run the CPU until program end:**  
+```zig
+cpu.Call(load_address); // returns on RTS
+```
+Or have more control and execute instruction by instruction:
 `RunStep()` returns the number of cycles executed
 ```zig
 while (cpu.RunStep() != 0) {
@@ -68,10 +73,15 @@ The following **public functions** provide full control over the CPU:
 
 #### 🖥 **CPU Control**
 ```zig
-pub fn Init(PC_init: u16) CPU // Initialize CPU with a start PC
+pub fn Init(allocator: std.mem.Allocator, PC_init: u16) CPU // Initialize CPU with a start PC
 pub fn Reset(cpu: *CPU) void // Reset CPU registers and PC (0xFFFC)
 pub fn HardReset(cpu: *CPU) void // Reset and clear memory
+```
+
+#### ⚡ ***Execution**
+```
 pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of used cycles
+pub fn Call(cpu: *CPU, Address: u16) void // Call a subroutine at Address, return on RTS
 ```
 
 #### 🎞 **Frame-Based Execution** (PAL & NTSC Timing)
@@ -90,10 +100,13 @@ pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memor
 pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void // Write a byte to memory
 pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to memory
 
-// Load a .prg file into memory. Returns the load address.
+// LoadPrg() - Load a .prg file into memory. Returns the load address.
 // When setPC is true, the CPU.PC is set to the load address.
-pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 
-pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 // Write a buffer containing a .prg to memory 
+// This function utilizes the allocator set at CPU initialization
+pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16
+
+// Write a buffer containing a .prg to memory. Returns the load address of the .prg.
+pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 
 ```
 
 #### 🎶 **SID Register Monitoring**
@@ -158,11 +171,17 @@ Test Output:
 [CPU ] PC: 0001 | A: CC | X: 19 | Y: 00 | Last Opc: 60 | Last Cycl: 6 | Cycl-TT: 233 | F: 00100100
 ```
 
+<br>
+
 ## License
 This emulator is released under the **MIT License**, allowing free modification and distribution.
 
+<br>
+
 ## Credits
 Developed with ❤️ by **M64**. Based on a lot of online research, and the works of @davepoo 💖🚀🔥
+
+<br>
 
 ## 🚀 Get Started Now!
 Clone the repository and start experimenting:
