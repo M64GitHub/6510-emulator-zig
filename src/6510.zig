@@ -1586,6 +1586,6 @@ pub const CPU = struct {
             break;
         }
         cpu.cycles_last_step = cpu.cycles_executed -% cycles_now;
-        return @as(u8, @bitCast(@as(u8, @truncate(cpu.cycles_last_step))));
+        return @as(u8, @truncate(cpu.cycles_last_step));
     }
 };
