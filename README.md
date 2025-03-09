@@ -70,6 +70,7 @@ The following **public functions** provide full control over the CPU:
 ```zig
 pub fn Init(PC_init: u16) CPU // Initialize CPU with a start PC
 pub fn Reset(cpu: *CPU) void // Reset CPU registers and PC (0xFFFC)
+pub fn HardReset(cpu: *CPU) void // Reset and clear memory
 pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction
 ```
 
@@ -85,6 +86,8 @@ pub fn ReadByte(cpu: *CPU, Address: u16) u8  // Read a byte from memory
 pub fn ReadWord(cpu: *CPU, Address: u16) u16  // Read a word (16-bit) from memory
 pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void // Write a byte to memory
 pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to memory
+pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 // Load a .prg file into memory
+pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 // Write a buffer containing a .prg to memory 
 pub fn LoadPrg(cpu: *CPU, Program: []const u8) u16 // Load a PRG program into memory
 ```
 
@@ -98,6 +101,7 @@ pub fn PrintSIDRegisters(cpu: *CPU) void // Print SID register values
 #### 🔍 **Debugging Tools**
 ```zig
 pub fn PrintStatus(cpu: *CPU) void // Print CPU state (PC, Registers, Last Opcode, etc.)
+CPU.dbg_enabled: bool // set for calling PrintStatus() after each execution step
 ```
 
 ## Test Run
