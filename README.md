@@ -168,6 +168,8 @@ This emulator is released under the **MIT License**, allowing free modification 
 ## Credits
 Developed with ❤️ by **M64**. Based on a lot of online research, and the works of @davepoo 💖🚀🔥
 
+<br>
+
 ## 🚀 Get Started Now!
 Clone the repository and start experimenting:
 ```sh
