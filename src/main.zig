@@ -8,7 +8,7 @@ pub fn main() !void {
     var cpu = CPU.Init(0x800);
     cpu.PrintStatus();
 
-    try stdout.print("Writing Program ...\n", .{});
+    try stdout.print("Writing program ...\n", .{});
     cpu.WriteByte(0xa9, 0x0800); //         LDA
     cpu.WriteByte(0x0a, 0x0801); //             #0A     ; 10
     cpu.WriteByte(0xaa, 0x0802); //         TAX
@@ -20,8 +20,11 @@ pub fn main() !void {
     cpu.WriteByte(0x60, 0x0808); //         RTS
     cpu.PrintStatus();
 
-    try stdout.print("Executing Program ...\n", .{});
+    try stdout.print("Executing program ...\n", .{});
     while (cpu.Run_Step() != 0) {
         cpu.PrintStatus();
+        if (cpu.SIDRegWritten()) {
+            try stdout.print("SID register written!\n", .{});
+        }
     }
 }
