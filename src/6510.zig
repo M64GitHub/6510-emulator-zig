@@ -144,6 +144,49 @@ pub const CPU = struct {
         while (cpu.RunStep() != 0) {}
     }
 
+    pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 {
+        var file = try std.fs.cwd().openFile(Filename, .{});
+        defer file.close();
+
+        const stat = try file.stat();
+        const file_size = stat.size;
+
+        const buffer = try cpu.allocator.alloc(u8, file_size);
+
+        _ = try file.readAll(buffer);
+
+        return SetPrg(cpu, buffer, setPC);
+    }
+
+    pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 {
+        var LoadAddress: u16 = 0;
+        if ((Program.len != 0) and (Program.len > 2)) {
+            var offs: u32 = 0;
+            const Lo: u16 = Program[offs];
+            offs += 1;
+            const Hi: u16 = @as(u16, Program[offs]) << 8;
+            offs += 1;
+            LoadAddress = @as(u16, Lo) | @as(u16, Hi);
+
+            var i: u16 = LoadAddress;
+            while (i < (LoadAddress +% Program.len -% 2)) : (i +%= 1) {
+                cpu.mem.Data[i] = Program[offs];
+                offs += 1;
+            }
+        }
+        if (setPC) cpu.PC = LoadAddress;
+        return LoadAddress;
+    }
+
+    pub fn WriteMem(cpu: *CPU, data: []const u8, Address: u16) u16 {
+        var offs: u32 = 0;
+        var i: u16 = Address;
+        while (offs < data.len) : (i +%= 1) {
+            cpu.mem.Data[i] = data[offs];
+            offs += 1;
+        }
+    }
+
     pub fn PrintStatus(cpu: *CPU) void {
         stdout.print("[CPU ] PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opc: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d} | ", .{
             cpu.PC,
@@ -205,40 +248,6 @@ pub const CPU = struct {
             stdout.print("{X:0>2} ", .{v}) catch {};
         }
         stdout.print("\n", .{}) catch {};
-    }
-
-    pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 {
-        var file = try std.fs.cwd().openFile(Filename, .{});
-        defer file.close();
-
-        const stat = try file.stat();
-        const file_size = stat.size;
-
-        const buffer = try cpu.allocator.alloc(u8, file_size);
-
-        _ = try file.readAll(buffer);
-
-        return SetPrg(cpu, buffer, setPC);
-    }
-
-    pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 {
-        var LoadAddress: u16 = 0;
-        if ((Program.len != 0) and (Program.len > 2)) {
-            var offs: u32 = 0;
-            const Lo: u16 = Program[offs];
-            offs += 1;
-            const Hi: u16 = @as(u16, Program[offs]) << 8;
-            offs += 1;
-            LoadAddress = @as(u16, Lo) | @as(u16, Hi);
-
-            var i: u16 = LoadAddress;
-            while (i < (LoadAddress +% Program.len -% 2)) : (i +%= 1) {
-                cpu.mem.Data[i] = Program[offs];
-                offs += 1;
-            }
-        }
-        if (setPC) cpu.PC = LoadAddress;
-        return LoadAddress;
     }
 
     fn CPU_FlagsToPS(cpu: *CPU) void {
