@@ -106,7 +106,10 @@ pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to me
 pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16
 
 // Write a buffer containing a .prg to memory. Returns the load address of the .prg.
-pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 
+pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16
+
+// Write a raw buffer to memory Address
+pub fn WriteMem(cpu: *CPU, data: []const u8, Address: u16) void
 ```
 
 #### 🎶 **SID Register Monitoring**
