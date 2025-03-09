@@ -40,10 +40,11 @@ var cpu = CPU.Init(std.heap.page_allocator, 0x0800); // initialize the PC with a
 ```
 **Load a program `.prg` file:**
 ```zig
-const file_name = "data/test1.prg";
-
 // The second parameter (true) tells LoadPrg() to set the PC to the load address,
-// effectively jupming to program start.
+// effectively jupming to program start. LoadPrg() is currently the only function
+// utilizing the allocator.
+
+const file_name = "data/test1.prg";
 const load_address = try cpu.LoadPrg(file_name, true);
 ```
 **Run the CPU until program end:**  
