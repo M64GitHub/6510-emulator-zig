@@ -1,6 +1,8 @@
 const std = @import("std"); // for printing status
 
 const SIDBase = 0xD400;
+const FramesPerVsyncPAL = 19656;
+const FramesPerVsyncNTSC = 17734;
 
 pub const CPU = struct {
     PC: u16,
@@ -14,6 +16,8 @@ pub const CPU = struct {
     cycles_executed: u32,
     cycles_last_step: u32,
     opcode_last: u8,
+    frame_ctr_PAL: u32,
+    frame_ctr_NTSC: u32,
     sid_reg_written: bool,
 
     pub const MEM64K = struct {
@@ -40,6 +44,8 @@ pub const CPU = struct {
     const FB_Zero = 0b000000010;
     const FB_Carry = 0b000000001;
 
+    const stdout = std.io.getStdOut().writer();
+
     pub fn Init(PC_init: u16) CPU {
         return CPU{
             .PC = PC_init,
@@ -63,6 +69,8 @@ pub const CPU = struct {
             .cycles_last_step = 0,
             .opcode_last = 0x00, // No opcode executed yet
             .sid_reg_written = false,
+            .frame_ctr_PAL = 0,
+            .frame_ctr_NTSC = 0,
         };
     }
 
@@ -91,14 +99,12 @@ pub const CPU = struct {
     }
 
     pub fn PrintStatus(cpu: *CPU) void {
-        const stdout = std.io.getStdOut().writer();
         stdout.print("PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opc: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d} | ", .{ cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.opcode_last, cpu.cycles_last_step, cpu.cycles_executed }) catch {};
         PrintFlags(cpu);
         stdout.print("\n", .{}) catch {};
     }
 
     pub fn PrintFlags(cpu: *CPU) void {
-        const stdout = std.io.getStdOut().writer();
         stdout.print("F: {b:0>8}", .{cpu.Status}) catch {};
     }
 
@@ -129,6 +135,21 @@ pub const CPU = struct {
 
     pub fn SIDRegWritten(cpu: *CPU) bool {
         return cpu.sid_reg_written;
+    }
+
+    pub fn GetSIDRegisters(cpu: *CPU) [25]u8 {
+        var sid_registers: [25]u8 = undefined;
+        @memcpy(&sid_registers, cpu.mem.Data[SIDBase .. SIDBase + 25]);
+        return sid_registers;
+    }
+
+    pub fn PrintSIDRegisters(cpu: *CPU) void {
+        stdout.print("SID Registers: ", .{}) catch {};
+        const sid_registers = cpu.GetSIDRegisters();
+        for (sid_registers) |v| {
+            stdout.print("{X:0>2} ", .{v}) catch {};
+        }
+        stdout.print("\n", .{}) catch {};
     }
 
     pub fn LoadPrg(cpu: *CPU, Program: []const u8, NumBytes: u32) u16 {
@@ -1452,6 +1473,10 @@ pub const CPU = struct {
             else => return 0,
         }
         cpu.cycles_last_step = cpu.cycles_executed -% cycles_now;
+
+        if (cpu.cycles_executed % FramesPerVsyncPAL == 0) cpu.frame_ctr_PAL += 1;
+        if (cpu.cycles_executed % FramesPerVsyncNTSC == 0) cpu.frame_ctr_NTSC += 1;
+
         return @as(u8, @truncate(cpu.cycles_last_step));
     }
 };
