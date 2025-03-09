@@ -4,11 +4,11 @@ const CPU = @import("6510.zig").CPU;
 pub fn main() !void {
     const stdout = std.io.getStdOut().writer();
 
-    try stdout.print("Initializing CPU\n", .{});
+    try stdout.print("[MAIN] Initializing CPU\n", .{});
     var cpu = CPU.Init(0x800);
     cpu.PrintStatus();
 
-    try stdout.print("Writing program ...\n", .{});
+    try stdout.print("[MAIN] Writing program ...\n", .{});
 
     // 0800: A9 0A                       LDA #$0A        ; 2
     // 0802: AA                          TAX             ; 2
@@ -35,15 +35,17 @@ pub fn main() !void {
     cpu.WriteByte(0x60, 0x080D); //         RTS
     cpu.PrintStatus();
 
-    try stdout.print("Executing program ...\n", .{});
+    try stdout.print("[MAIN] Executing program ...\n", .{});
+    const SID_volume_old = cpu.GetSIDRegisters()[24];
     while (cpu.Run_Step() != 0) {
         cpu.PrintStatus();
         if (cpu.SIDRegWritten()) {
-            try stdout.print("SID register written!\n", .{});
+            try stdout.print("[MAIN] SID register written!\n", .{});
             cpu.PrintSIDRegisters();
 
             const sid_registers = cpu.GetSIDRegisters();
-            try stdout.print("SID volume: {X:0>2}\n", .{sid_registers[24]});
+            if (SID_volume_old != sid_registers[24])
+                try stdout.print("[MAIN] SID volume changed: {X:0>2}\n", .{sid_registers[24]});
         }
     }
 }

@@ -98,8 +98,34 @@ pub const CPU = struct {
         cpu.opcode_last = 0x00;
     }
 
+    pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool {
+        var frames_now = cpu.frame_ctr_PAL;
+        var frames_executed = 0;
+
+        while (cpu.RunStep() != 0) {
+            if (cpu.frame_ctr_PAL > frames_now) frames_executed += 1;
+            if (frames_executed == frame_count) break;
+            frames_now = cpu.frame_ctr_PAL;
+        }
+        if (frames_executed == 0) return false;
+        return true;
+    }
+
+    pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) bool {
+        var frames_now = cpu.frame_ctr_NTSC;
+        var frames_executed = 0;
+
+        while (cpu.RunStep() != 0) {
+            if (cpu.frame_ctr_PAL > frames_now) frames_executed += 1;
+            if (frames_executed == frame_count) break;
+            frames_now = cpu.frame_ctr_NTSC;
+        }
+        if (frames_executed == 0) return false;
+        return true;
+    }
+
     pub fn PrintStatus(cpu: *CPU) void {
-        stdout.print("PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opc: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d} | ", .{ cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.opcode_last, cpu.cycles_last_step, cpu.cycles_executed }) catch {};
+        stdout.print("[CPU ] PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opc: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d} | ", .{ cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.opcode_last, cpu.cycles_last_step, cpu.cycles_executed }) catch {};
         PrintFlags(cpu);
         stdout.print("\n", .{}) catch {};
     }
@@ -144,7 +170,7 @@ pub const CPU = struct {
     }
 
     pub fn PrintSIDRegisters(cpu: *CPU) void {
-        stdout.print("SID Registers: ", .{}) catch {};
+        stdout.print("[CPU ] SID Registers: ", .{}) catch {};
         const sid_registers = cpu.GetSIDRegisters();
         for (sid_registers) |v| {
             stdout.print("{X:0>2} ", .{v}) catch {};
