@@ -94,8 +94,10 @@ pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void // Write a word to me
 // LoadPrg() - Load a .prg file into memory. Returns the load address.
 // When setPC is true, the CPU.PC is set to the load address.
 // This function utilizes the allocator set at CPU initialization
-pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 
-pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 // Write a buffer containing a .prg to memory 
+pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16
+
+// Write a buffer containing a .prg to memory. Returns the load address of the .prg.
+pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 
 ```
 
 #### 🎶 **SID Register Monitoring**
