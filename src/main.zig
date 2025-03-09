@@ -66,9 +66,11 @@ pub fn main() !void {
 
     const file_name = "data/test1.prg";
     try stdout.print("[MAIN] Loading '{s}'\n", .{file_name});
-    const load_address = try cpu.LoadPrg(file_name);
+
+    // The second parameter tells LoadPrg to set the PC to the load address
+    const load_address = try cpu.LoadPrg(file_name, true);
     try stdout.print("[MAIN] Load address: {X:0>4}\n", .{load_address});
-    cpu.PC = load_address;
+
     cpu.dbg_enabled = true; // will call PrintStatus after each step
     _ = cpu.RunPALFrames(1);
 }

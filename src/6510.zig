@@ -197,7 +197,7 @@ pub const CPU = struct {
         stdout.print("\n", .{}) catch {};
     }
 
-    pub fn LoadPrg(cpu: *CPU, Filename: []const u8) !u16 {
+    pub fn LoadPrg(cpu: *CPU, Filename: []const u8, setPC: bool) !u16 {
         var file = try std.fs.cwd().openFile(Filename, .{});
         defer file.close();
 
@@ -208,10 +208,10 @@ pub const CPU = struct {
 
         _ = try file.readAll(buffer);
 
-        return SetPrg(cpu, buffer);
+        return SetPrg(cpu, buffer, setPC);
     }
 
-    pub fn SetPrg(cpu: *CPU, Program: []const u8) u16 {
+    pub fn SetPrg(cpu: *CPU, Program: []const u8, setPC: bool) u16 {
         var LoadAddress: u16 = 0;
         if ((Program.len != 0) and (Program.len > 2)) {
             var offs: u32 = 0;
@@ -227,6 +227,7 @@ pub const CPU = struct {
                 offs += 1;
             }
         }
+        if (setPC) cpu.PC = LoadAddress;
         return LoadAddress;
     }
 
