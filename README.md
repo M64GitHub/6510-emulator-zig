@@ -13,7 +13,6 @@ The test program `main.zig` writes a small routine into the memory, which execut
 0809: E0 19                       CPX #$19        ; 2
 080B: D0 F6                       BNE $0804       ; 2/3 loop
 080D: 60                          RTS             ; 6
-
 ```
 
 Test Output:
