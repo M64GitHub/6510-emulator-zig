@@ -139,13 +139,27 @@ pub const CPU = struct {
         return frames_executed;
     }
 
+    pub fn Call(cpu: *CPU, Address: u16) void {
+        cpu.PC = Address;
+        while (cpu.RunStep() != 0) {}
+    }
+
     pub fn PrintStatus(cpu: *CPU) void {
-        stdout.print("[CPU ] PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opc: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d} | ", .{ cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.opcode_last, cpu.cycles_last_step, cpu.cycles_executed }) catch {};
+        stdout.print("[CPU ] PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opc: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d} | ", .{
+            cpu.PC,
+            cpu.A,
+            cpu.X,
+            cpu.Y,
+            cpu.opcode_last,
+            cpu.cycles_last_step,
+            cpu.cycles_executed,
+        }) catch {};
         PrintFlags(cpu);
         stdout.print("\n", .{}) catch {};
     }
 
     pub fn PrintFlags(cpu: *CPU) void {
+        cpu.CPU_FlagsToPS();
         stdout.print("F: {b:0>8}", .{cpu.Status}) catch {};
     }
 

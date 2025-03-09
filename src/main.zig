@@ -51,7 +51,9 @@ pub fn main() !void {
 
             const sid_registers = cpu.GetSIDRegisters();
             if (SID_volume_old != sid_registers[24])
-                try stdout.print("[MAIN] SID volume changed: {X:0>2}\n", .{sid_registers[24]});
+                try stdout.print("[MAIN] SID volume changed: {X:0>2}\n", .{
+                    sid_registers[24],
+                });
         }
     }
     try stdout.print("\n\n\n", .{});
@@ -72,5 +74,7 @@ pub fn main() !void {
     try stdout.print("[MAIN] Load address: {X:0>4}\n", .{load_address});
 
     cpu.dbg_enabled = true; // will call PrintStatus after each step
-    _ = cpu.RunPALFrames(1);
+    // _ = cpu.RunPALFrames(1);
+
+    cpu.Call(load_address);
 }
