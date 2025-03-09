@@ -5,6 +5,8 @@ const FramesPerVsyncPAL = 19656;
 const FramesPerVsyncNTSC = 17734;
 
 pub const CPU = struct {
+    allocator: std.mem.Allocator,
+
     PC: u16,
     SP: u8,
     A: u8,
@@ -19,9 +21,16 @@ pub const CPU = struct {
     frame_ctr_PAL: u32,
     frame_ctr_NTSC: u32,
     sid_reg_written: bool,
+    dbg_enabled: bool,
 
     pub const MEM64K = struct {
-        Data: [65536]u8,
+        Data: [0x10000]u8,
+
+        pub fn clear(self: *MEM64K) void {
+            for (0..0x10000) |i| {
+                self.Data[i] = 0x00;
+            }
+        }
     };
 
     const CPUFlags = struct {
@@ -46,7 +55,7 @@ pub const CPU = struct {
 
     const stdout = std.io.getStdOut().writer();
 
-    pub fn Init(PC_init: u16) CPU {
+    pub fn Init(allocator: std.mem.Allocator, PC_init: u16) CPU {
         return CPU{
             .PC = PC_init,
             .SP = 0xFD,
@@ -71,6 +80,8 @@ pub const CPU = struct {
             .sid_reg_written = false,
             .frame_ctr_PAL = 0,
             .frame_ctr_NTSC = 0,
+            .dbg_enabled = false,
+            .allocator = allocator,
         };
     }
 
@@ -98,12 +109,19 @@ pub const CPU = struct {
         cpu.opcode_last = 0x00;
     }
 
+    // Reset CPU and clear memory
+    pub fn HardReset(cpu: *CPU) void {
+        cpu.Reset();
+        cpu.mem.clear();
+    }
+
     pub fn RunPALFrames(cpu: *CPU, frame_count: u32) bool {
         var frames_now = cpu.frame_ctr_PAL;
-        var frames_executed = 0;
+        var frames_executed: u32 = 0;
 
         while (cpu.RunStep() != 0) {
             if (cpu.frame_ctr_PAL > frames_now) frames_executed += 1;
+            if (cpu.dbg_enabled) cpu.PrintStatus();
             if (frames_executed == frame_count) break;
             frames_now = cpu.frame_ctr_PAL;
         }
@@ -116,7 +134,8 @@ pub const CPU = struct {
         var frames_executed = 0;
 
         while (cpu.RunStep() != 0) {
-            if (cpu.frame_ctr_PAL > frames_now) frames_executed += 1;
+            if (cpu.frame_ctr_NTSC > frames_now) frames_executed += 1;
+            if (cpu.dbg_enabled) cpu.PrintStatus();
             if (frames_executed == frame_count) break;
             frames_now = cpu.frame_ctr_NTSC;
         }
@@ -178,7 +197,21 @@ pub const CPU = struct {
         stdout.print("\n", .{}) catch {};
     }
 
-    pub fn LoadPrg(cpu: *CPU, Program: []const u8) u16 {
+    pub fn LoadPrg(cpu: *CPU, Filename: []const u8) !u16 {
+        var file = try std.fs.cwd().openFile(Filename, .{});
+        defer file.close();
+
+        const stat = try file.stat();
+        const file_size = stat.size;
+
+        const buffer = try cpu.allocator.alloc(u8, file_size);
+
+        _ = try file.readAll(buffer);
+
+        return SetPrg(cpu, buffer);
+    }
+
+    pub fn SetPrg(cpu: *CPU, Program: []const u8) u16 {
         var LoadAddress: u16 = 0;
         if ((Program.len != 0) and (Program.len > 2)) {
             var offs: u32 = 0;

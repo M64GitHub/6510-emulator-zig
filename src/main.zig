@@ -2,11 +2,14 @@ const std = @import("std");
 const CPU = @import("6510.zig").CPU;
 
 pub fn main() !void {
+    const gpa = std.heap.page_allocator;
     const stdout = std.io.getStdOut().writer();
 
     try stdout.print("[MAIN] Initializing CPU\n", .{});
-    var cpu = CPU.Init(0x800);
+    var cpu = CPU.Init(gpa, 0x800);
     cpu.PrintStatus();
+
+    // -- manually write a program into memory
 
     try stdout.print("[MAIN] Writing program ...\n", .{});
 
@@ -35,6 +38,9 @@ pub fn main() !void {
     cpu.WriteByte(0x60, 0x080D); //         RTS
     cpu.PrintStatus();
 
+    // -- manually execute single steps, print cpu status
+    //    and check sid register modifications
+
     try stdout.print("[MAIN] Executing program ...\n", .{});
     const SID_volume_old = cpu.GetSIDRegisters()[24];
     while (cpu.RunStep() != 0) {
@@ -48,4 +54,21 @@ pub fn main() !void {
                 try stdout.print("[MAIN] SID volume changed: {X:0>2}\n", .{sid_registers[24]});
         }
     }
+    try stdout.print("\n\n\n", .{});
+
+    // --  reset cpu and clear memory
+
+    try stdout.print("[MAIN] CPU hardreset\n", .{});
+    cpu.HardReset(); // clears memory
+
+    // -- load a .prg file from disk
+    //    this prg has the same opcodes, but a load address of 0x0801
+
+    const file_name = "data/test1.prg";
+    try stdout.print("[MAIN] Loading '{s}'\n", .{file_name});
+    const load_address = try cpu.LoadPrg(file_name);
+    try stdout.print("[MAIN] Load address: {X:0>4}\n", .{load_address});
+    cpu.PC = load_address;
+    cpu.dbg_enabled = true; // will call PrintStatus after each step
+    _ = cpu.RunPALFrames(1);
 }
