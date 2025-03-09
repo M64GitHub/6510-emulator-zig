@@ -450,178 +450,155 @@ pub const CPU = struct {
                 },
                 37 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_And(cpu, Address);
                     }
                     break;
                 },
                 5 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_Ora(cpu, Address);
                     }
                     break;
                 },
                 69 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_Xor(cpu, Address);
                     }
                     break;
                 },
                 53 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         CPU_And(cpu, Address);
                     }
                     break;
                 },
                 21 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         CPU_Ora(cpu, Address);
                     }
                     break;
                 },
                 85 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         CPU_Xor(cpu, Address);
                     }
                     break;
                 },
                 45 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_And(cpu, Address);
                     }
                     break;
                 },
                 13 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_Ora(cpu, Address);
                     }
                     break;
                 },
                 77 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_Xor(cpu, Address);
                     }
                     break;
                 },
                 61 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
                         CPU_And(cpu, Address);
                     }
                     break;
                 },
                 29 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
                         CPU_Ora(cpu, Address);
                     }
                     break;
                 },
                 93 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
                         CPU_Xor(cpu, Address);
                     }
                     break;
                 },
                 57 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
                         CPU_And(cpu, Address);
                     }
                     break;
                 },
                 25 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
                         CPU_Ora(cpu, Address);
                     }
                     break;
                 },
                 89 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
                         CPU_Xor(cpu, Address);
                     }
                     break;
                 },
                 33 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
                         CPU_And(cpu, Address);
                     }
                     break;
                 },
                 1 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
                         CPU_Ora(cpu, Address);
                     }
                     break;
                 },
                 65 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
                         CPU_Xor(cpu, Address);
                     }
                     break;
                 },
                 49 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectY(cpu);
                         CPU_And(cpu, Address);
                     }
                     break;
                 },
                 17 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectY(cpu);
                         CPU_Ora(cpu, Address);
                     }
                     break;
                 },
                 81 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectY(cpu);
                         CPU_Xor(cpu, Address);
                     }
                     break;
                 },
                 36 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Value: u8 = CPU_ReadByte(cpu, Address);
                         cpu.Flags.Z = @intFromBool(!((cpu.A & Value) != 0));
                         cpu.Flags.N = @intFromBool((Value & 128) != 0);
                         cpu.Flags.V = @intFromBool((Value & 64) != 0);
@@ -630,10 +607,8 @@ pub const CPU = struct {
                 },
                 44 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Value: u8 = CPU_ReadByte(cpu, Address);
                         cpu.Flags.Z = @intFromBool(!((cpu.A & Value) != 0));
                         cpu.Flags.N = @intFromBool((Value & 128) != 0);
                         cpu.Flags.V = @intFromBool((Value & 64) != 0);
@@ -663,232 +638,203 @@ pub const CPU = struct {
                 },
                 165 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.A);
                     }
                     break;
                 },
                 166 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.X);
                     }
                     break;
                 },
                 182 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageY(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.X);
                     }
                     break;
                 },
                 164 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.Y);
                     }
                     break;
                 },
                 181 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.A);
                     }
                     break;
                 },
                 180 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.Y);
                     }
                     break;
                 },
                 173 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.A);
                     }
                     break;
                 },
                 174 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.X);
                     }
                     break;
                 },
                 172 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.Y);
                     }
                     break;
                 },
                 189 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.A);
                     }
                     break;
                 },
                 188 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.Y);
                     }
                     break;
                 },
                 185 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.A);
                     }
                     break;
                 },
                 190 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.X);
                     }
                     break;
                 },
                 161 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.A);
                     }
                     break;
                 },
                 129 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
                         CPU_WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 177 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectY(cpu);
                         CPU_LoadRegister(cpu, Address, &cpu.A);
                     }
                     break;
                 },
                 145 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY_6(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrIndirectY_6(cpu);
                         CPU_WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 133 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 134 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_WriteByte(cpu, cpu.X, Address);
                     }
                     break;
                 },
                 150 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageY(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageY(cpu);
                         CPU_WriteByte(cpu, cpu.X, Address);
                     }
                     break;
                 },
                 132 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         CPU_WriteByte(cpu, cpu.Y, Address);
                     }
                     break;
                 },
                 141 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 142 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_WriteByte(cpu, cpu.X, Address);
                     }
                     break;
                 },
                 140 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         CPU_WriteByte(cpu, cpu.Y, Address);
                     }
                     break;
                 },
                 149 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         CPU_WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 148 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         CPU_WriteByte(cpu, cpu.Y, Address);
                     }
                     break;
                 },
                 157 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         CPU_WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 153 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY_5(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsoluteY_5(cpu);
                         CPU_WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 32 => {
                     {
-                        var SubAddr: u16 = CPU_FetchWord(cpu);
-                        _ = &SubAddr;
+                        const SubAddr: u16 = CPU_FetchWord(cpu);
                         CPU_PushWordToStack(cpu, cpu.PC - 1);
                         cpu.PC = SubAddr;
                         cpu.cycles_executed +%= 1;
@@ -897,8 +843,7 @@ pub const CPU = struct {
                 },
                 96 => {
                     {
-                        var ReturnAddress: u16 = CPU_PopWordFromStack(cpu);
-                        _ = &ReturnAddress;
+                        const ReturnAddress: u16 = CPU_PopWordFromStack(cpu);
                         cpu.PC = ReturnAddress + 1;
                         cpu.cycles_executed +%= 2;
                     }
@@ -906,8 +851,7 @@ pub const CPU = struct {
                 },
                 76 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
                         cpu.PC = Address;
                     }
                     break;
@@ -915,7 +859,6 @@ pub const CPU = struct {
                 108 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
                         Address = CPU_ReadWord(cpu, Address);
                         cpu.PC = Address;
                     }
@@ -1029,105 +972,89 @@ pub const CPU = struct {
                 },
                 198 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
                         var Value: u8 = CPU_ReadByte(cpu, Address);
-                        _ = &Value;
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
+                        CPU_WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
                 214 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
                         var Value: u8 = CPU_ReadByte(cpu, Address);
-                        _ = &Value;
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
+                        CPU_WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
                 206 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_WriteByte(cpu, Value, Address);
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
                 222 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_WriteByte(cpu, Value, Address);
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
                 230 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_WriteByte(cpu, Value, Address);
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
                 246 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_WriteByte(cpu, Value, Address);
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
                 238 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_WriteByte(cpu, Value, Address);
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
                 254 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Value;
+                        const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_WriteByte(cpu, Value, Address);
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
@@ -1236,507 +1163,404 @@ pub const CPU = struct {
                 },
                 109 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 125 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 121 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 101 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 117 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 97 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 113 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrIndirectY(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 105 => {
                     {
-                        var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
-                        _ = &Operand;
+                        const Operand: u8 = CPU_FetchUByte(cpu);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
                 },
                 233 => {
                     {
-                        var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
-                        _ = &Operand;
+                        const Operand: u8 = CPU_FetchUByte(cpu);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 237 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 229 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 245 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 253 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 249 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 225 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 241 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
+                        const Address: u16 = CPU_AddrIndirectY(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
                 },
                 224 => {
                     {
-                        var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.X)));
+                        const Operand: u8 = CPU_FetchUByte(cpu);
+                        CPU_RegisterCompare(cpu, Operand, cpu.X);
                     }
                     break;
                 },
                 192 => {
                     {
-                        var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.Y)));
+                        const Operand: u8 = CPU_FetchUByte(cpu);
+                        CPU_RegisterCompare(cpu, Operand, cpu.Y);
                     }
                     break;
                 },
                 228 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.X)));
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.X);
                     }
                     break;
                 },
                 196 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.Y)));
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.Y);
                     }
                     break;
                 },
                 236 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.X)));
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.X);
                     }
                     break;
                 },
                 204 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.Y)));
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.Y);
                     }
                     break;
                 },
                 201 => {
                     {
-                        var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Operand: u8 = CPU_FetchUByte(cpu);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 197 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 213 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 205 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 221 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Address: u16 = CPU_AddrAbsoluteX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 217 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Address: u16 = CPU_AddrAbsoluteY(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 193 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Address: u16 = CPU_AddrIndirectX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 209 => {
                     {
-                        var Address: u16 = CPU_AddrIndirectY(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        CPU_RegisterCompare(cpu, Operand, @as(u8, @bitCast(cpu.A)));
+                        const Address: u16 = CPU_AddrIndirectY(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
                 },
                 10 => {
                     {
-                        cpu.A = @as(u8, @bitCast(CPU_ASL(cpu, @as(u8, @bitCast(cpu.A)))));
+                        cpu.A = CPU_ASL(cpu, cpu.A);
                     }
                     break;
                 },
                 6 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ASL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ASL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 22 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ASL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ASL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 14 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ASL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ASL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 30 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ASL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ASL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 74 => {
                     {
-                        cpu.A = @as(u8, @bitCast(CPU_LSR(cpu, @as(u8, @bitCast(cpu.A)))));
+                        cpu.A = CPU_LSR(cpu, cpu.A);
                     }
                     break;
                 },
                 70 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_LSR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_LSR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 86 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_LSR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_LSR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 78 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_LSR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_LSR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 94 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_LSR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_LSR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 42 => {
                     {
-                        cpu.A = @as(u8, @bitCast(CPU_ROL(cpu, @as(u8, @bitCast(cpu.A)))));
+                        cpu.A = CPU_ROL(cpu, cpu.A);
                     }
                     break;
                 },
                 38 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 54 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 46 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 62 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROL(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROL(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 106 => {
                     {
-                        cpu.A = @as(u8, @bitCast(CPU_ROR(cpu, @as(u8, @bitCast(cpu.A)))));
+                        cpu.A = CPU_ROR(cpu, cpu.A);
                     }
                     break;
                 },
                 102 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPage(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPage(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 118 => {
                     {
-                        var Address: u16 = CPU_AddrZeroPageX(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrZeroPageX(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 110 => {
                     {
-                        var Address: u16 = CPU_AddrAbsolute(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsolute(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 126 => {
                     {
-                        var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        _ = &Address;
-                        var Operand: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
-                        _ = &Operand;
-                        var Result: u8 = CPU_ROR(cpu, Operand);
-                        _ = &Result;
-                        CPU_WriteByte(cpu, @as(u8, @bitCast(Result)), Address);
+                        const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
+                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Result: u8 = CPU_ROR(cpu, Operand);
+                        CPU_WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
