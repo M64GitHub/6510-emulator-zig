@@ -4,6 +4,8 @@ A **MOS 6510 (Commodore 64) CPU emulator** written in **Zig**, designed for accu
 
 Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 
+<br>
+
 ## 🚀 Features
 - 🎮 **Fully Functional 6510 CPU Emulator** – Implements all 6502/6510 instructions and addressing modes.
 - 🎞 **Video Synchronization** – Execute CPU cycles in sync with PAL (19,656 cycles/frame) or NTSC (17,734 cycles/frame).
@@ -12,12 +14,11 @@ Enjoy bringing the **C64 CPU to life in Zig!** 🕹🔥
 - 💾 **Program Loading Support** – Load PRG files and execute C64 programs.
 - 🛠 **CPU Debugging Tools** – Functions for inspecting CPU registers, memory, and SID states.
 
+<br>
 
 ## Installation
 ### Requirements:
 - **Zig** (Latest stable version)
-- **C Compiler** (if integrating with C-based projects)
-- **CMake (Optional)** – For larger builds
 
 ### Building the Emulator:
 ```sh
@@ -25,15 +26,21 @@ zig build
 ```
 
 ### Running the Emulator:
+```sh
+zig build run
+```
+
+
+## API Reference
+
 To integrate the emulator into a Zig project, simply import it and initialize:
 ```zig
+const CPU = @import("6510.zig").CPU;
 var cpu = CPU.Init(0x0800);
 // write something into memory via WriteByte() calls, or use LoadProgram()
 cpu.RunPALFrames(1); // Execute one PAL frame worth of cycles
 ```
 
-
-## API Reference
 The following **public functions** provide full control over the CPU:
 
 ### 🖥 **CPU Control**
@@ -119,15 +126,11 @@ Test Output:
 [CPU ] PC: 0001 | A: CC | X: 19 | Y: 00 | Last Opc: 60 | Last Cycl: 6 | Cycl-TT: 233 | F: 00100100
 ```
 
----
-
 ## License
 This emulator is released under the **MIT License**, allowing free modification and distribution.
 
 ## Credits
 Developed with ❤️ by **M64**. Structured and based on the works of @davepoo 💖🚀🔥
-
----
 
 ## 🚀 Get Started Now!
 Clone the repository and start experimenting:
