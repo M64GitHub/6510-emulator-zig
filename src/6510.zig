@@ -86,34 +86,34 @@ pub const CPU = struct {
         cpu.opcode_last = 0x00;
     }
 
-    pub fn CPU_PrintStatus(cpu: *CPU) void {
+    pub fn PrintStatus(cpu: *CPU) void {
         std.debug.print("PC: {X:0>4} | A: {X:0>2} | X: {X:0>2} | Y: {X:0>2} | Last Opcode: {X:0>2} | Last Cycl: {d} | Cycl-TT: {d}\n", .{ cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.opcode_last, cpu.cycles_last_step, cpu.cycles_executed });
     }
 
-    pub fn CPU_ReadByte(cpu: *CPU, Address: u16) u8 {
+    pub fn ReadByte(cpu: *CPU, Address: u16) u8 {
         cpu.cycles_executed +%= 1;
         return cpu.mem.Data[Address];
     }
 
-    pub fn CPU_ReadWord(cpu: *CPU, Address: u16) u16 {
-        const LoByte: u8 = CPU_ReadByte(cpu, Address);
-        const HiByte: u8 = CPU_ReadByte(cpu, Address + 1);
+    pub fn ReadWord(cpu: *CPU, Address: u16) u16 {
+        const LoByte: u8 = ReadByte(cpu, Address);
+        const HiByte: u8 = ReadByte(cpu, Address + 1);
         cpu.cycles_executed +%= 2;
         return @as(u16, LoByte) | (@as(u16, HiByte) << 8);
     }
 
-    pub fn CPU_WriteByte(cpu: *CPU, Value: u8, Address: u16) void {
+    pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void {
         cpu.mem.Data[Address] = Value;
         cpu.cycles_executed +%= 1;
     }
 
-    pub fn CPU_WriteWord(cpu: *CPU, Value: u16, Address: u16) void {
+    pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void {
         cpu.mem.Data[Address] = @truncate(Value & 0xFF);
         cpu.mem.Data[Address + 1] = @truncate(Value >> 8);
         cpu.cycles_executed +%= 2;
     }
 
-    pub fn CPU_LoadPrg(cpu: *CPU, Program: []const u8, NumBytes: u32) u16 {
+    pub fn LoadPrg(cpu: *CPU, Program: []const u8, NumBytes: u32) u16 {
         var LoadAddress: u16 = 0;
         if ((Program.len != 0) and (NumBytes > 2)) {
             var offs: u32 = 0;
@@ -197,9 +197,9 @@ pub const CPU = struct {
     }
 
     fn CPU_PushWordToStack(cpu: *CPU, Value: u16) void {
-        CPU_WriteByte(cpu, @truncate(Value >> 8), CPU_SPToAddress(cpu));
+        WriteByte(cpu, @truncate(Value >> 8), CPU_SPToAddress(cpu));
         cpu.SP -%= 1;
-        CPU_WriteByte(cpu, @truncate(Value & 0xff), CPU_SPToAddress(cpu));
+        WriteByte(cpu, @truncate(Value & 0xff), CPU_SPToAddress(cpu));
         cpu.SP -%= 1;
     }
 
@@ -225,7 +225,7 @@ pub const CPU = struct {
     }
 
     fn CPU_PopWordFromStack(cpu: *CPU) u16 {
-        const ValueFromStack: u16 = CPU_ReadWord(cpu, CPU_SPToAddress(cpu) + 1);
+        const ValueFromStack: u16 = ReadWord(cpu, CPU_SPToAddress(cpu) + 1);
         cpu.SP +%= 2;
         cpu.cycles_executed +%= 1;
         return ValueFromStack;
@@ -239,22 +239,22 @@ pub const CPU = struct {
     }
 
     fn CPU_LoadRegister(cpu: *CPU, Address: u16, Register: *u8) void {
-        Register.* = CPU_ReadByte(cpu, Address);
+        Register.* = ReadByte(cpu, Address);
         CPU_UpdateFlags(cpu, Register.*);
     }
 
     fn CPU_And(cpu: *CPU, Address: u16) void {
-        cpu.A &= CPU_ReadByte(cpu, Address);
+        cpu.A &= ReadByte(cpu, Address);
         CPU_UpdateFlags(cpu, cpu.A);
     }
 
     fn CPU_Ora(cpu: *CPU, Address: u16) void {
-        cpu.A |= CPU_ReadByte(cpu, Address);
+        cpu.A |= ReadByte(cpu, Address);
         CPU_UpdateFlags(cpu, cpu.A);
     }
 
     fn CPU_Xor(cpu: *CPU, Address: u16) void {
-        cpu.A ^= CPU_ReadByte(cpu, Address);
+        cpu.A ^= ReadByte(cpu, Address);
         CPU_UpdateFlags(cpu, cpu.A);
     }
 
@@ -398,13 +398,13 @@ pub const CPU = struct {
         var ZPAddress: u8 = CPU_FetchUByte(cpu);
         ZPAddress +%= cpu.X;
         cpu.cycles_executed +%= 1;
-        const EffectiveAddr: u16 = CPU_ReadWord(cpu, ZPAddress);
+        const EffectiveAddr: u16 = ReadWord(cpu, ZPAddress);
         return EffectiveAddr;
     }
 
     fn CPU_AddrIndirectY(cpu: *CPU) u16 {
         const ZPAddress: u8 = CPU_FetchUByte(cpu);
-        const EffectiveAddr: u16 = CPU_ReadWord(cpu, ZPAddress);
+        const EffectiveAddr: u16 = ReadWord(cpu, ZPAddress);
         const EffectiveAddrY: u16 = EffectiveAddr + cpu.Y;
         const CrossedPageBoundary: u16 = (EffectiveAddr ^ EffectiveAddrY) >> 8;
         if (CrossedPageBoundary != 0) {
@@ -415,7 +415,7 @@ pub const CPU = struct {
 
     fn CPU_AddrIndirectY_6(cpu: *CPU) u16 {
         const ZPAddress: u8 = CPU_FetchUByte(cpu);
-        const EffectiveAddr: u16 = CPU_ReadWord(cpu, ZPAddress);
+        const EffectiveAddr: u16 = ReadWord(cpu, ZPAddress);
         const EffectiveAddrY: u16 = EffectiveAddr + cpu.Y;
         return EffectiveAddrY;
     }
@@ -427,7 +427,7 @@ pub const CPU = struct {
         cpu.Flags.C = @intFromBool(RegisterValue >= Operand);
     }
 
-    pub fn CPU_Run_Step(cpu: *CPU) u8 {
+    pub fn Run_Step(cpu: *CPU) u8 {
         const cycles_now: u32 = cpu.cycles_executed;
         const opcode: u8 = CPU_FetchUByte(cpu);
         cpu.opcode_last = opcode;
@@ -598,7 +598,7 @@ pub const CPU = struct {
                 36 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Value: u8 = CPU_ReadByte(cpu, Address);
+                        const Value: u8 = ReadByte(cpu, Address);
                         cpu.Flags.Z = @intFromBool(!((cpu.A & Value) != 0));
                         cpu.Flags.N = @intFromBool((Value & 128) != 0);
                         cpu.Flags.V = @intFromBool((Value & 64) != 0);
@@ -608,7 +608,7 @@ pub const CPU = struct {
                 44 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Value: u8 = CPU_ReadByte(cpu, Address);
+                        const Value: u8 = ReadByte(cpu, Address);
                         cpu.Flags.Z = @intFromBool(!((cpu.A & Value) != 0));
                         cpu.Flags.N = @intFromBool((Value & 128) != 0);
                         cpu.Flags.V = @intFromBool((Value & 64) != 0);
@@ -737,7 +737,7 @@ pub const CPU = struct {
                 129 => {
                     {
                         const Address: u16 = CPU_AddrIndirectX(cpu);
-                        CPU_WriteByte(cpu, cpu.A, Address);
+                        WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
@@ -751,84 +751,84 @@ pub const CPU = struct {
                 145 => {
                     {
                         const Address: u16 = CPU_AddrIndirectY_6(cpu);
-                        CPU_WriteByte(cpu, cpu.A, Address);
+                        WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 133 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        CPU_WriteByte(cpu, cpu.A, Address);
+                        WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 134 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        CPU_WriteByte(cpu, cpu.X, Address);
+                        WriteByte(cpu, cpu.X, Address);
                     }
                     break;
                 },
                 150 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageY(cpu);
-                        CPU_WriteByte(cpu, cpu.X, Address);
+                        WriteByte(cpu, cpu.X, Address);
                     }
                     break;
                 },
                 132 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        CPU_WriteByte(cpu, cpu.Y, Address);
+                        WriteByte(cpu, cpu.Y, Address);
                     }
                     break;
                 },
                 141 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        CPU_WriteByte(cpu, cpu.A, Address);
+                        WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 142 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        CPU_WriteByte(cpu, cpu.X, Address);
+                        WriteByte(cpu, cpu.X, Address);
                     }
                     break;
                 },
                 140 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        CPU_WriteByte(cpu, cpu.Y, Address);
+                        WriteByte(cpu, cpu.Y, Address);
                     }
                     break;
                 },
                 149 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        CPU_WriteByte(cpu, cpu.A, Address);
+                        WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 148 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        CPU_WriteByte(cpu, cpu.Y, Address);
+                        WriteByte(cpu, cpu.Y, Address);
                     }
                     break;
                 },
                 157 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        CPU_WriteByte(cpu, cpu.A, Address);
+                        WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
                 153 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteY_5(cpu);
-                        CPU_WriteByte(cpu, cpu.A, Address);
+                        WriteByte(cpu, cpu.A, Address);
                     }
                     break;
                 },
@@ -859,7 +859,7 @@ pub const CPU = struct {
                 108 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
-                        Address = CPU_ReadWord(cpu, Address);
+                        Address = ReadWord(cpu, Address);
                         cpu.PC = Address;
                     }
                     break;
@@ -973,10 +973,10 @@ pub const CPU = struct {
                 198 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -984,10 +984,10 @@ pub const CPU = struct {
                 214 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -995,10 +995,10 @@ pub const CPU = struct {
                 206 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -1006,10 +1006,10 @@ pub const CPU = struct {
                 222 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -1017,10 +1017,10 @@ pub const CPU = struct {
                 230 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -1028,10 +1028,10 @@ pub const CPU = struct {
                 246 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -1039,10 +1039,10 @@ pub const CPU = struct {
                 238 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -1050,10 +1050,10 @@ pub const CPU = struct {
                 254 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        var Value: u8 = CPU_ReadByte(cpu, Address);
+                        var Value: u8 = ReadByte(cpu, Address);
                         Value +%= 1;
                         cpu.cycles_executed +%= 1;
-                        CPU_WriteByte(cpu, Value, Address);
+                        WriteByte(cpu, Value, Address);
                         CPU_UpdateFlags(cpu, Value);
                     }
                     break;
@@ -1164,7 +1164,7 @@ pub const CPU = struct {
                 109 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
@@ -1172,7 +1172,7 @@ pub const CPU = struct {
                 125 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
@@ -1180,7 +1180,7 @@ pub const CPU = struct {
                 121 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
@@ -1188,7 +1188,7 @@ pub const CPU = struct {
                 101 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
@@ -1196,7 +1196,7 @@ pub const CPU = struct {
                 117 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
@@ -1204,7 +1204,7 @@ pub const CPU = struct {
                 97 => {
                     {
                         const Address: u16 = CPU_AddrIndirectX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
@@ -1212,7 +1212,7 @@ pub const CPU = struct {
                 113 => {
                     {
                         const Address: u16 = CPU_AddrIndirectY(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_ADC(cpu, Operand);
                     }
                     break;
@@ -1234,7 +1234,7 @@ pub const CPU = struct {
                 237 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
@@ -1242,7 +1242,7 @@ pub const CPU = struct {
                 229 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
@@ -1250,7 +1250,7 @@ pub const CPU = struct {
                 245 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
@@ -1258,7 +1258,7 @@ pub const CPU = struct {
                 253 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
@@ -1266,7 +1266,7 @@ pub const CPU = struct {
                 249 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
@@ -1274,7 +1274,7 @@ pub const CPU = struct {
                 225 => {
                     {
                         const Address: u16 = CPU_AddrIndirectX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
@@ -1282,7 +1282,7 @@ pub const CPU = struct {
                 241 => {
                     {
                         const Address: u16 = CPU_AddrIndirectY(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_SBC(cpu, Operand);
                     }
                     break;
@@ -1304,7 +1304,7 @@ pub const CPU = struct {
                 228 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.X);
                     }
                     break;
@@ -1312,7 +1312,7 @@ pub const CPU = struct {
                 196 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.Y);
                     }
                     break;
@@ -1320,7 +1320,7 @@ pub const CPU = struct {
                 236 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.X);
                     }
                     break;
@@ -1328,7 +1328,7 @@ pub const CPU = struct {
                 204 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.Y);
                     }
                     break;
@@ -1343,7 +1343,7 @@ pub const CPU = struct {
                 197 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
@@ -1351,7 +1351,7 @@ pub const CPU = struct {
                 213 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
@@ -1359,7 +1359,7 @@ pub const CPU = struct {
                 205 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
@@ -1367,7 +1367,7 @@ pub const CPU = struct {
                 221 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
@@ -1375,7 +1375,7 @@ pub const CPU = struct {
                 217 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteY(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
@@ -1383,7 +1383,7 @@ pub const CPU = struct {
                 193 => {
                     {
                         const Address: u16 = CPU_AddrIndirectX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
@@ -1391,7 +1391,7 @@ pub const CPU = struct {
                 209 => {
                     {
                         const Address: u16 = CPU_AddrIndirectY(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         CPU_RegisterCompare(cpu, Operand, cpu.A);
                     }
                     break;
@@ -1405,36 +1405,36 @@ pub const CPU = struct {
                 6 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ASL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 22 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ASL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 14 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ASL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 30 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ASL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
@@ -1447,36 +1447,36 @@ pub const CPU = struct {
                 70 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_LSR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 86 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_LSR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 78 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_LSR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 94 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_LSR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
@@ -1489,36 +1489,36 @@ pub const CPU = struct {
                 38 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 54 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 46 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 62 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROL(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
@@ -1531,36 +1531,36 @@ pub const CPU = struct {
                 102 => {
                     {
                         const Address: u16 = CPU_AddrZeroPage(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 118 => {
                     {
                         const Address: u16 = CPU_AddrZeroPageX(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 110 => {
                     {
                         const Address: u16 = CPU_AddrAbsolute(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
                 126 => {
                     {
                         const Address: u16 = CPU_AddrAbsoluteX_5(cpu);
-                        const Operand: u8 = CPU_ReadByte(cpu, Address);
+                        const Operand: u8 = ReadByte(cpu, Address);
                         const Result: u8 = CPU_ROR(cpu, Operand);
-                        CPU_WriteByte(cpu, Result, Address);
+                        WriteByte(cpu, Result, Address);
                     }
                     break;
                 },
@@ -1568,7 +1568,7 @@ pub const CPU = struct {
                     {
                         CPU_PushWordToStack(cpu, cpu.PC + 1);
                         CPU_PushPSToStack(cpu);
-                        cpu.PC = CPU_ReadWord(cpu, 65534);
+                        cpu.PC = ReadWord(cpu, 65534);
                         cpu.Flags.B = 1;
                         cpu.Flags.I = 1;
                         return 0;
