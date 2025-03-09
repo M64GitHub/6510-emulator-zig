@@ -274,7 +274,6 @@ pub const CPU = struct {
     }
 
     fn CPU_ADC(cpu: *CPU, Operand: u8) void {
-        // char AreSignBitsTheSame = !((cpu->A ^ Operand) & FB_Negative);
         const AreSignBitsTheSame: bool = ((cpu.A ^ Operand) & FB_Negative) == 0;
         var Sum: u16 = @as(u16, @bitCast(@as(u16, cpu.A)));
         Sum +%= @as(u16, Operand);
@@ -433,23 +432,23 @@ pub const CPU = struct {
         const opcode: u8 = CPU_FetchUByte(cpu);
         cpu.opcode_last = opcode;
         while (true) {
-            switch (@as(c_int, @bitCast(@as(u32, opcode)))) {
-                @as(c_int, @bitCast(@as(u32, @as(u8, 41)))) => {
-                    cpu.A &= @as(u8, @bitCast(@as(i8, @truncate(@as(c_int, @bitCast(@as(u32, CPU_FetchUByte(cpu))))))));
+            switch (opcode) {
+                41 => {
+                    cpu.A &= CPU_FetchUByte(cpu);
                     CPU_UpdateFlags(cpu, cpu.A);
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 9)))) => {
-                    cpu.A |= @as(u8, @bitCast(@as(i8, @truncate(@as(c_int, @bitCast(@as(u32, CPU_FetchUByte(cpu))))))));
+                9 => {
+                    cpu.A |= CPU_FetchUByte(cpu);
                     CPU_UpdateFlags(cpu, cpu.A);
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 73)))) => {
-                    cpu.A ^= @as(u8, @bitCast(@as(i8, @truncate(@as(c_int, @bitCast(@as(u32, CPU_FetchUByte(cpu))))))));
+                73 => {
+                    cpu.A ^= CPU_FetchUByte(cpu);
                     CPU_UpdateFlags(cpu, cpu.A);
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 37)))) => {
+                37 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -457,7 +456,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 5)))) => {
+                5 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -465,7 +464,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 69)))) => {
+                69 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -473,7 +472,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 53)))) => {
+                53 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -481,7 +480,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 21)))) => {
+                21 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -489,7 +488,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 85)))) => {
+                85 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -497,7 +496,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 45)))) => {
+                45 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -505,7 +504,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 13)))) => {
+                13 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -513,7 +512,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 77)))) => {
+                77 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -521,7 +520,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 61)))) => {
+                61 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -529,7 +528,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 29)))) => {
+                29 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -537,7 +536,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 93)))) => {
+                93 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -545,7 +544,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 57)))) => {
+                57 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -553,7 +552,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 25)))) => {
+                25 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -561,7 +560,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 89)))) => {
+                89 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -569,7 +568,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 33)))) => {
+                33 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -577,7 +576,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 1)))) => {
+                1 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -585,7 +584,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 65)))) => {
+                65 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -593,7 +592,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 49)))) => {
+                49 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY(cpu);
                         _ = &Address;
@@ -601,7 +600,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 17)))) => {
+                17 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY(cpu);
                         _ = &Address;
@@ -609,7 +608,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 81)))) => {
+                81 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY(cpu);
                         _ = &Address;
@@ -617,52 +616,52 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 36)))) => {
+                36 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         _ = &Value;
-                        cpu.Flags.Z = @intFromBool(!((@as(c_int, @bitCast(@as(u32, cpu.A))) & @as(c_int, @bitCast(@as(u32, Value)))) != 0));
-                        cpu.Flags.N = @intFromBool((@as(c_int, @bitCast(@as(u32, Value))) & @as(c_int, @bitCast(@as(u32, @as(u8, @bitCast(@as(i8, @truncate(@as(c_int, 128))))))))) != @as(c_int, 0));
-                        cpu.Flags.V = @intFromBool((@as(c_int, @bitCast(@as(u32, Value))) & @as(c_int, @bitCast(@as(u32, @as(u8, @bitCast(@as(i8, @truncate(@as(c_int, 64))))))))) != @as(c_int, 0));
+                        cpu.Flags.Z = @intFromBool(!((cpu.A & Value) != 0));
+                        cpu.Flags.N = @intFromBool((Value & 128) != 0);
+                        cpu.Flags.V = @intFromBool((Value & 64) != 0);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 44)))) => {
+                44 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         _ = &Value;
-                        cpu.Flags.Z = @intFromBool(!((@as(c_int, @bitCast(@as(u32, cpu.A))) & @as(c_int, @bitCast(@as(u32, Value)))) != 0));
-                        cpu.Flags.N = @intFromBool((@as(c_int, @bitCast(@as(u32, Value))) & @as(c_int, @bitCast(@as(u32, @as(u8, @bitCast(@as(i8, @truncate(@as(c_int, 128))))))))) != @as(c_int, 0));
-                        cpu.Flags.V = @intFromBool((@as(c_int, @bitCast(@as(u32, Value))) & @as(c_int, @bitCast(@as(u32, @as(u8, @bitCast(@as(i8, @truncate(@as(c_int, 64))))))))) != @as(c_int, 0));
+                        cpu.Flags.Z = @intFromBool(!((cpu.A & Value) != 0));
+                        cpu.Flags.N = @intFromBool((Value & 128) != 0);
+                        cpu.Flags.V = @intFromBool((Value & 64) != 0);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 169)))) => {
+                169 => {
                     {
                         cpu.A = CPU_FetchUByte(cpu);
                         CPU_UpdateFlags(cpu, cpu.A);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 162)))) => {
+                162 => {
                     {
                         cpu.X = CPU_FetchUByte(cpu);
                         CPU_UpdateFlags(cpu, cpu.X);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 160)))) => {
+                160 => {
                     {
                         cpu.Y = CPU_FetchUByte(cpu);
                         CPU_UpdateFlags(cpu, cpu.Y);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 165)))) => {
+                165 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -670,7 +669,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 166)))) => {
+                166 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -678,7 +677,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 182)))) => {
+                182 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageY(cpu);
                         _ = &Address;
@@ -686,7 +685,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 164)))) => {
+                164 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -694,7 +693,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 181)))) => {
+                181 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -702,7 +701,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 180)))) => {
+                180 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -710,7 +709,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 173)))) => {
+                173 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -718,7 +717,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 174)))) => {
+                174 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -726,7 +725,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 172)))) => {
+                172 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -734,7 +733,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 189)))) => {
+                189 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -742,7 +741,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 188)))) => {
+                188 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -750,7 +749,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 185)))) => {
+                185 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -758,7 +757,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 190)))) => {
+                190 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -766,7 +765,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 161)))) => {
+                161 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -774,7 +773,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 129)))) => {
+                129 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -782,7 +781,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 177)))) => {
+                177 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY(cpu);
                         _ = &Address;
@@ -790,7 +789,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 145)))) => {
+                145 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY_6(cpu);
                         _ = &Address;
@@ -798,7 +797,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 133)))) => {
+                133 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -806,7 +805,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 134)))) => {
+                134 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -814,7 +813,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 150)))) => {
+                150 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageY(cpu);
                         _ = &Address;
@@ -822,7 +821,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 132)))) => {
+                132 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -830,7 +829,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 141)))) => {
+                141 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -838,7 +837,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 142)))) => {
+                142 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -846,7 +845,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 140)))) => {
+                140 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -854,7 +853,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 149)))) => {
+                149 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -862,7 +861,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 148)))) => {
+                148 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -870,7 +869,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 157)))) => {
+                157 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         _ = &Address;
@@ -878,7 +877,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 153)))) => {
+                153 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY_5(cpu);
                         _ = &Address;
@@ -886,26 +885,26 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 32)))) => {
+                32 => {
                     {
                         var SubAddr: u16 = CPU_FetchWord(cpu);
                         _ = &SubAddr;
-                        CPU_PushWordToStack(cpu, @as(u16, @bitCast(@as(c_short, @truncate(@as(c_int, @bitCast(@as(u32, cpu.PC))) - @as(c_int, 1))))));
+                        CPU_PushWordToStack(cpu, cpu.PC - 1);
                         cpu.PC = SubAddr;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 96)))) => {
+                96 => {
                     {
                         var ReturnAddress: u16 = CPU_PopWordFromStack(cpu);
                         _ = &ReturnAddress;
-                        cpu.PC = @as(u16, @bitCast(@as(c_short, @truncate(@as(c_int, @bitCast(@as(u32, ReturnAddress))) + @as(c_int, 1)))));
-                        cpu.cycles_executed +%= @as(u32, @bitCast(@as(c_int, 2)));
+                        cpu.PC = ReturnAddress + 1;
+                        cpu.cycles_executed +%= 2;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 76)))) => {
+                76 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -913,7 +912,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 108)))) => {
+                108 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -922,7 +921,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 186)))) => {
+                186 => {
                     {
                         cpu.X = cpu.SP;
                         cpu.cycles_executed +%= 1;
@@ -930,20 +929,20 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 154)))) => {
+                154 => {
                     {
                         cpu.SP = cpu.X;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 72)))) => {
+                72 => {
                     {
                         CPU_PushByteOntoStack(cpu, cpu.A);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 104)))) => {
+                104 => {
                     {
                         cpu.A = CPU_PopByteFromStack(cpu);
                         CPU_UpdateFlags(cpu, cpu.A);
@@ -951,20 +950,20 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 8)))) => {
+                8 => {
                     {
                         CPU_PushPSToStack(cpu);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 40)))) => {
+                40 => {
                     {
                         CPU_PopPSFromStack(cpu);
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 170)))) => {
+                170 => {
                     {
                         cpu.X = cpu.A;
                         cpu.cycles_executed +%= 1;
@@ -972,7 +971,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 168)))) => {
+                168 => {
                     {
                         cpu.Y = cpu.A;
                         cpu.cycles_executed +%= 1;
@@ -980,7 +979,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 138)))) => {
+                138 => {
                     {
                         cpu.A = cpu.X;
                         cpu.cycles_executed +%= 1;
@@ -988,7 +987,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 152)))) => {
+                152 => {
                     {
                         cpu.A = cpu.Y;
                         cpu.cycles_executed +%= 1;
@@ -996,7 +995,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 232)))) => {
+                232 => {
                     {
                         cpu.X +%= 1;
                         cpu.cycles_executed +%= 1;
@@ -1004,7 +1003,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 200)))) => {
+                200 => {
                     {
                         cpu.Y +%= 1;
                         cpu.cycles_executed +%= 1;
@@ -1012,7 +1011,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 202)))) => {
+                202 => {
                     {
                         cpu.X -%= 1;
                         cpu.cycles_executed +%= 1;
@@ -1020,7 +1019,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 136)))) => {
+                136 => {
                     {
                         cpu.Y -%= 1;
                         cpu.cycles_executed +%= 1;
@@ -1028,33 +1027,33 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 198)))) => {
+                198 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         _ = &Value;
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
                         CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 214)))) => {
+                214 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
-                        var Value: u8 = @as(u8, @bitCast(CPU_ReadByte(cpu, Address)));
+                        var Value: u8 = CPU_ReadByte(cpu, Address);
                         _ = &Value;
                         Value -%= 1;
                         cpu.cycles_executed +%= 1;
                         CPU_WriteByte(cpu, @as(u8, @bitCast(Value)), Address);
-                        CPU_UpdateFlags(cpu, @as(u8, @bitCast(Value)));
+                        CPU_UpdateFlags(cpu, Value);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 206)))) => {
+                206 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1067,7 +1066,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 222)))) => {
+                222 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         _ = &Address;
@@ -1080,7 +1079,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 230)))) => {
+                230 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1093,7 +1092,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 246)))) => {
+                246 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1106,7 +1105,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 238)))) => {
+                238 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1119,7 +1118,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 254)))) => {
+                254 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         _ = &Address;
@@ -1132,110 +1131,110 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 240)))) => {
+                240 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.Z), 1);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 208)))) => {
+                208 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.Z), 0);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 176)))) => {
+                176 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.C), 1);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 144)))) => {
+                144 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.C), 0);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 48)))) => {
+                48 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.N), 1);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 16)))) => {
+                16 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.N), 0);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 80)))) => {
+                80 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.V), 0);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 112)))) => {
+                112 => {
                     {
                         CPU_Branch(cpu, @as(u8, cpu.Flags.V), 1);
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 24)))) => {
+                24 => {
                     {
                         cpu.Flags.C = 0;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 56)))) => {
+                56 => {
                     {
                         cpu.Flags.C = 1;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 216)))) => {
+                216 => {
                     {
                         cpu.Flags.D = 0;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 248)))) => {
+                248 => {
                     {
                         cpu.Flags.D = 1;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 88)))) => {
+                88 => {
                     {
                         cpu.Flags.I = 0;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 120)))) => {
+                120 => {
                     {
                         cpu.Flags.I = 1;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 184)))) => {
+                184 => {
                     {
                         cpu.Flags.V = 0;
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 234)))) => {
+                234 => {
                     {
                         cpu.cycles_executed +%= 1;
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 109)))) => {
+                109 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1245,7 +1244,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 125)))) => {
+                125 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -1255,7 +1254,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 121)))) => {
+                121 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -1265,7 +1264,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 101)))) => {
+                101 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1275,7 +1274,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 117)))) => {
+                117 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1285,7 +1284,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 97)))) => {
+                97 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -1295,7 +1294,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 113)))) => {
+                113 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY(cpu);
                         _ = &Address;
@@ -1305,7 +1304,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 105)))) => {
+                105 => {
                     {
                         var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
                         _ = &Operand;
@@ -1313,7 +1312,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 233)))) => {
+                233 => {
                     {
                         var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
                         _ = &Operand;
@@ -1321,7 +1320,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 237)))) => {
+                237 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1331,7 +1330,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 229)))) => {
+                229 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1341,7 +1340,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 245)))) => {
+                245 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1351,7 +1350,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 253)))) => {
+                253 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -1361,7 +1360,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 249)))) => {
+                249 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -1371,7 +1370,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 225)))) => {
+                225 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -1381,7 +1380,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 241)))) => {
+                241 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY(cpu);
                         _ = &Address;
@@ -1391,7 +1390,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 224)))) => {
+                224 => {
                     {
                         var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
                         _ = &Operand;
@@ -1399,7 +1398,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 192)))) => {
+                192 => {
                     {
                         var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
                         _ = &Operand;
@@ -1407,7 +1406,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 228)))) => {
+                228 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1417,7 +1416,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 196)))) => {
+                196 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1427,7 +1426,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 236)))) => {
+                236 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1437,7 +1436,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 204)))) => {
+                204 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1447,7 +1446,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 201)))) => {
+                201 => {
                     {
                         var Operand: u8 = @as(u8, @bitCast(CPU_FetchUByte(cpu)));
                         _ = &Operand;
@@ -1455,7 +1454,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 197)))) => {
+                197 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1465,7 +1464,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 213)))) => {
+                213 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1475,7 +1474,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 205)))) => {
+                205 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1485,7 +1484,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 221)))) => {
+                221 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX(cpu);
                         _ = &Address;
@@ -1495,7 +1494,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 217)))) => {
+                217 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteY(cpu);
                         _ = &Address;
@@ -1505,7 +1504,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 193)))) => {
+                193 => {
                     {
                         var Address: u16 = CPU_AddrIndirectX(cpu);
                         _ = &Address;
@@ -1515,7 +1514,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 209)))) => {
+                209 => {
                     {
                         var Address: u16 = CPU_AddrIndirectY(cpu);
                         _ = &Address;
@@ -1525,13 +1524,13 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 10)))) => {
+                10 => {
                     {
                         cpu.A = @as(u8, @bitCast(CPU_ASL(cpu, @as(u8, @bitCast(cpu.A)))));
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 6)))) => {
+                6 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1543,7 +1542,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 22)))) => {
+                22 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1555,7 +1554,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 14)))) => {
+                14 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1567,7 +1566,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 30)))) => {
+                30 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         _ = &Address;
@@ -1579,13 +1578,13 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 74)))) => {
+                74 => {
                     {
                         cpu.A = @as(u8, @bitCast(CPU_LSR(cpu, @as(u8, @bitCast(cpu.A)))));
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 70)))) => {
+                70 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1597,7 +1596,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 86)))) => {
+                86 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1609,7 +1608,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 78)))) => {
+                78 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1621,7 +1620,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 94)))) => {
+                94 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         _ = &Address;
@@ -1633,13 +1632,13 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 42)))) => {
+                42 => {
                     {
                         cpu.A = @as(u8, @bitCast(CPU_ROL(cpu, @as(u8, @bitCast(cpu.A)))));
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 38)))) => {
+                38 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1651,7 +1650,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 54)))) => {
+                54 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1663,7 +1662,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 46)))) => {
+                46 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1675,7 +1674,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 62)))) => {
+                62 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         _ = &Address;
@@ -1687,13 +1686,13 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 106)))) => {
+                106 => {
                     {
                         cpu.A = @as(u8, @bitCast(CPU_ROR(cpu, @as(u8, @bitCast(cpu.A)))));
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 102)))) => {
+                102 => {
                     {
                         var Address: u16 = CPU_AddrZeroPage(cpu);
                         _ = &Address;
@@ -1705,7 +1704,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 118)))) => {
+                118 => {
                     {
                         var Address: u16 = CPU_AddrZeroPageX(cpu);
                         _ = &Address;
@@ -1717,7 +1716,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 110)))) => {
+                110 => {
                     {
                         var Address: u16 = CPU_AddrAbsolute(cpu);
                         _ = &Address;
@@ -1729,7 +1728,7 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 126)))) => {
+                126 => {
                     {
                         var Address: u16 = CPU_AddrAbsoluteX_5(cpu);
                         _ = &Address;
@@ -1741,17 +1740,17 @@ pub const CPU = struct {
                     }
                     break;
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 0)))) => {
+                0 => {
                     {
-                        CPU_PushWordToStack(cpu, @as(u16, @bitCast(@as(c_short, @truncate(@as(c_int, @bitCast(@as(u32, cpu.PC))) + @as(c_int, 1))))));
+                        CPU_PushWordToStack(cpu, cpu.PC + 1);
                         CPU_PushPSToStack(cpu);
-                        cpu.PC = CPU_ReadWord(cpu, @as(u16, @bitCast(@as(c_short, @truncate(@as(c_int, 65534))))));
+                        cpu.PC = CPU_ReadWord(cpu, 65534);
                         cpu.Flags.B = 1;
                         cpu.Flags.I = 1;
                         return 0;
                     }
                 },
-                @as(c_int, @bitCast(@as(u32, @as(u8, 64)))) => {
+                64 => {
                     {
                         CPU_PopPSFromStack(cpu);
                         cpu.PC = CPU_PopWordFromStack(cpu);
