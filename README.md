@@ -78,8 +78,8 @@ pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of u
 ```zig
 // The following functions return the number of frames executed
 
-pub fn RunPALFrames(cpu: *CPU, frame_count: u32) u32 // Execute CPU cycles for given PAL frames
-pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) u32 // Execute CPU cycles for given NTSC frames
+pub fn RunPALFrames(cpu: *CPU, frame_count: u32) u32 // Execute until a number of given PAL frames reached
+pub fn RunNTSCFrames(cpu: *CPU, frame_count: u32) u32 // Execute until a number of given NTSC frames reached
 ```
 
 #### 📝 **Memory Read/Write**
