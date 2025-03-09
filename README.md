@@ -125,7 +125,7 @@ Test Output:
 This emulator is released under the **MIT License**, allowing free modification and distribution.
 
 ## Credits
-Developed with ❤️ by **M64**. Based on the works of @davepoo 💖🚀🔥
+Developed with ❤️ by **M64**. Structured and based on the works of @davepoo 💖🚀🔥
 
 ---
 
