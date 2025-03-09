@@ -121,7 +121,6 @@ pub const CPU = struct {
 
         while (cpu.RunStep() != 0) {
             if (cpu.frame_ctr_PAL > frames_now) frames_executed += 1;
-            if (cpu.dbg_enabled) cpu.PrintStatus();
             if (frames_executed == frame_count) break;
             frames_now = cpu.frame_ctr_PAL;
         }
@@ -135,7 +134,6 @@ pub const CPU = struct {
 
         while (cpu.RunStep() != 0) {
             if (cpu.frame_ctr_NTSC > frames_now) frames_executed += 1;
-            if (cpu.dbg_enabled) cpu.PrintStatus();
             if (frames_executed == frame_count) break;
             frames_now = cpu.frame_ctr_NTSC;
         }
@@ -1536,6 +1534,7 @@ pub const CPU = struct {
 
         if (cpu.cycles_executed % FramesPerVsyncPAL == 0) cpu.frame_ctr_PAL += 1;
         if (cpu.cycles_executed % FramesPerVsyncNTSC == 0) cpu.frame_ctr_NTSC += 1;
+        if (cpu.dbg_enabled) cpu.PrintStatus();
 
         return @as(u8, @truncate(cpu.cycles_last_step));
     }
