@@ -182,7 +182,7 @@ This emulator is released under the **MIT License**, allowing free modification 
 <br>
 
 ## Credits
-Developed with ❤️ by **M64**. Based on a lot of online research, and the works of @davepoo 💖🚀🔥
+Developed with ❤️ by **M64** 
 
 <br>
 
