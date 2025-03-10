@@ -60,7 +60,7 @@ pub const CPU = struct {
     pub fn Init(allocator: std.mem.Allocator, PC_init: u16) CPU {
         return CPU{
             .PC = PC_init,
-            .SP = 0xFF,
+            .SP = 0xFD,
             .A = 0,
             .X = 0,
             .Y = 0,
@@ -100,7 +100,7 @@ pub const CPU = struct {
         cpu.Flags = CPUFlags{
             .C = 0,
             .Z = 0,
-            .I = 1,
+            .I = 0,
             .D = 0,
             .B = 0,
             .Unused = 1,
