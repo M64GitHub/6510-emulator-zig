@@ -79,7 +79,7 @@ pub fn HardReset(cpu: *CPU) void // Reset and clear memory
 ```
 
 #### ⚡ ***Execution**
-```
+```zig
 pub fn RunStep(cpu: *CPU) u8 // Execute a single instruction, return number of used cycles
 pub fn Call(cpu: *CPU, Address: u16) void // Call a subroutine at Address, return on RTS
 ```
