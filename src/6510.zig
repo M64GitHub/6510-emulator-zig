@@ -146,6 +146,7 @@ pub const CPU = struct {
     pub fn Call(cpu: *CPU, Address: u16) void {
         cpu.PC = Address;
         cpu.ext_sid_reg_written = false;
+        cpu.CPU_PushWordToStack(0x0000);
         while (cpu.RunStep() != 0) {}
     }
 
@@ -928,6 +929,20 @@ pub const CPU = struct {
                     const ReturnAddress: u16 = CPU_PopWordFromStack(cpu);
                     cpu.PC = ReturnAddress + 1;
                     cpu.cycles_executed +%= 2;
+                    if (cpu.dbg_enabled) {
+                        stdout.print("[CPU ] Return to {X:0>4}\n", .{ReturnAddress}) catch {};
+                    }
+                    if (ReturnAddress == 0x0000) {
+                        if (cpu.dbg_enabled) {
+                            stdout.print("[CPU ] Return EXIT!\n", .{}) catch {};
+                        }
+                        cpu.cycles_last_step = cpu.cycles_executed -% cycles_now;
+
+                        if (cpu.cycles_executed % FramesPerVsyncPAL == 0) cpu.frame_ctr_PAL += 1;
+                        if (cpu.cycles_executed % FramesPerVsyncNTSC == 0) cpu.frame_ctr_NTSC += 1;
+
+                        return @as(u8, @truncate(cpu.cycles_last_step));
+                    }
                 }
             },
             76 => {
