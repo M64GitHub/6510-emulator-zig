@@ -21,7 +21,9 @@ pub const CPU = struct {
     frame_ctr_PAL: u32,
     frame_ctr_NTSC: u32,
     sid_reg_written: bool,
+    ext_sid_reg_written: bool,
     dbg_enabled: bool,
+    sid_dbg_enabled: bool,
 
     pub const MEM64K = struct {
         Data: [0x10000]u8,
@@ -58,7 +60,7 @@ pub const CPU = struct {
     pub fn Init(allocator: std.mem.Allocator, PC_init: u16) CPU {
         return CPU{
             .PC = PC_init,
-            .SP = 0xFD,
+            .SP = 0xFF,
             .A = 0,
             .X = 0,
             .Y = 0,
@@ -78,9 +80,11 @@ pub const CPU = struct {
             .cycles_last_step = 0,
             .opcode_last = 0x00, // No opcode executed yet
             .sid_reg_written = false,
+            .ext_sid_reg_written = false,
             .frame_ctr_PAL = 0,
             .frame_ctr_NTSC = 0,
             .dbg_enabled = false,
+            .sid_dbg_enabled = false,
             .allocator = allocator,
         };
     }
@@ -218,11 +222,15 @@ pub const CPU = struct {
     }
 
     pub fn WriteByte(cpu: *CPU, Value: u8, Address: u16) void {
-        cpu.mem.Data[Address] = Value;
-        cpu.cycles_executed +%= 1;
         if ((Address >= SIDBase) and (Address <= (SIDBase + 25))) {
             cpu.sid_reg_written = true;
+            // ext flag only when value changed
+            if (cpu.mem.Data[Address] != Value) {
+                cpu.ext_sid_reg_written = true;
+            }
         }
+        cpu.mem.Data[Address] = Value;
+        cpu.cycles_executed +%= 1;
     }
 
     pub fn WriteWord(cpu: *CPU, Value: u16, Address: u16) void {
@@ -545,11 +553,24 @@ pub const CPU = struct {
         cpu.Flags.C = @intFromBool(RegisterValue >= Operand);
     }
 
+    pub fn EmulateD012(cpu: *CPU) void {
+        cpu.mem.Data[0xD012] = cpu.mem.Data[0xD012] +% 1;
+        if ((cpu.mem.Data[0xD012] == 0) or (((cpu.mem.Data[0xD011] & 0x80) != 0) and
+            (cpu.mem.Data[0xD012] >= 0x38)))
+        {
+            cpu.mem.Data[0xD011] ^= 0x80;
+            cpu.mem.Data[0xD012] = 0x00;
+        }
+    }
+
     pub fn RunStep(cpu: *CPU) u8 {
         const cycles_now: u32 = cpu.cycles_executed;
         const opcode: u8 = CPU_FetchUByte(cpu);
         cpu.opcode_last = opcode;
         cpu.sid_reg_written = false;
+
+        cpu.EmulateD012();
+
         switch (opcode) {
             41 => {
                 cpu.A &= CPU_FetchUByte(cpu);
@@ -1555,7 +1576,14 @@ pub const CPU = struct {
 
         if (cpu.cycles_executed % FramesPerVsyncPAL == 0) cpu.frame_ctr_PAL += 1;
         if (cpu.cycles_executed % FramesPerVsyncNTSC == 0) cpu.frame_ctr_NTSC += 1;
-        if (cpu.dbg_enabled) cpu.PrintStatus();
+
+        if (cpu.dbg_enabled) {
+            cpu.PrintStatus();
+        }
+
+        if (cpu.sid_dbg_enabled and cpu.sid_reg_written) {
+            cpu.PrintSIDRegisters();
+        }
 
         return @as(u8, @truncate(cpu.cycles_last_step));
     }
